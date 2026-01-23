@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, DM_Sans, Saira_Condensed } from "next/font/google";
+import { Outfit, DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -14,10 +14,10 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const sairaCondensed = Saira_Condensed({
+const bebasNeue = Bebas_Neue({
   variable: "--font-logo",
   subsets: ["latin", "latin-ext"],
-  weight: ["700", "800"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu" className="scroll-smooth">
-      <body className={`${outfit.variable} ${dmSans.variable} ${sairaCondensed.variable} antialiased`}>
+      <body className={`${outfit.variable} ${dmSans.variable} ${bebasNeue.variable} antialiased`}>
         {children}
       </body>
     </html>

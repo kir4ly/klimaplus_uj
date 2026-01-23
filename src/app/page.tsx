@@ -86,13 +86,12 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group" style={{ fontFamily: "var(--font-logo), sans-serif" }}>
-            <span className="text-3xl sm:text-4xl tracking-wide text-[#4A90D9] transition-transform group-hover:scale-105">
-              KLIMA
-            </span>
-            <span className="text-3xl sm:text-4xl tracking-wide text-[#4A90D9] transition-transform group-hover:scale-105">
-              PLUS
-            </span>
+          <a href="#" className="flex items-center group">
+            <img
+              src="/logo.png"
+              alt="Klima Plus"
+              className="h-10 sm:h-12 w-auto transition-transform group-hover:scale-105"
+            />
           </a>
 
           {/* Desktop Nav */}
@@ -113,9 +112,9 @@ function Header() {
           <div className="hidden md:flex items-center gap-4">
             <a
               href={phoneLink}
-              className="group flex items-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 btn-shine"
+              className="group flex items-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-300"
             >
-              <Phone className="w-5 h-5 transition-transform group-hover:rotate-12" />
+              <Phone className="w-4 h-4 transition-transform group-hover:rotate-12" />
               <span className="hidden sm:inline">{phoneNumber}</span>
               <span className="sm:hidden">Hívás</span>
             </a>
@@ -151,9 +150,9 @@ function Header() {
               ))}
               <a
                 href={phoneLink}
-                className="flex items-center justify-center gap-2 bg-[#4A90D9] text-white px-6 py-3 rounded-full font-semibold mt-2"
+                className="flex items-center justify-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-5 py-2.5 rounded-xl font-semibold mt-2 transition-all duration-300"
               >
-                <Phone className="w-5 h-5" />
+                <Phone className="w-4 h-4" />
                 {phoneNumber}
               </a>
             </nav>
@@ -170,7 +169,7 @@ function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-blue-50/50 to-white">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-blue-50/50 to-white">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -206,19 +205,19 @@ function Hero() {
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-48 right-[20%] text-blue-300/50"
         >
-          <Wind className="w-20 h-20" />
+          <Snowflake className="w-20 h-20" />
         </motion.div>
         <motion.div
           animate={{ y: [-15, 15, -15] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
           className="absolute bottom-40 left-[10%] text-cyan-200/60"
         >
-          <Sun className="w-12 h-12" />
+          <Snowflake className="w-12 h-12" />
         </motion.div>
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
         <div className="text-center">
           {/* Badge */}
           <motion.div
@@ -231,17 +230,19 @@ function Hero() {
             Celldömölk és környéke
           </motion.div>
 
-          {/* Main Headline - KLIMA PLUS Logo */}
-          <motion.h1
+          {/* Main Logo Image */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-wide mb-6"
-            style={{ fontFamily: "var(--font-logo), sans-serif" }}
+            className="mb-6"
           >
-            <span className="text-[#4A90D9]">KLIMA</span>
-            <span className="text-[#4A90D9] ml-3 sm:ml-5">PLUS</span>
-          </motion.h1>
+            <img
+              src="/hero-logo-cropped.png"
+              alt="Klima Plus - Klíma technika"
+              className="w-full max-w-[280px] sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto"
+            />
+          </motion.div>
 
           {/* Subtitle */}
           <motion.h2
@@ -283,59 +284,74 @@ function Hero() {
           >
             <a
               href={phoneLink}
-              className="group flex items-center gap-3 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 btn-shine"
+              className="group flex items-center gap-3 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300"
             >
-              <Phone className="w-6 h-6 transition-transform group-hover:rotate-12" />
+              <Phone className="w-5 h-5 transition-transform group-hover:rotate-12" />
               Hívjon Most!
-              <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </a>
             <a
               href="#szolgaltatasok"
-              className="group flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-8 py-4 rounded-full text-lg font-semibold border-2 border-slate-200 hover:border-[#4A90D9] transition-all duration-300"
+              className="group flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-xl text-base font-semibold border border-slate-200 transition-all duration-300"
             >
               Szolgáltatások
-              <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </a>
           </motion.div>
 
-          {/* Trust Badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="mt-16 flex flex-wrap justify-center gap-8 text-slate-400"
-          >
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-[#4A90D9]" />
-              <span className="text-sm font-medium">10 év garancia</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-[#4A90D9]" />
-              <span className="text-sm font-medium">Gyors kiszállás</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-5 h-5 text-[#4A90D9]" />
-              <span className="text-sm font-medium">100+ elégedett ügyfél</span>
-            </div>
-          </motion.div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-slate-300 rounded-full flex justify-center pt-2"
-        >
-          <motion.div className="w-1.5 h-1.5 bg-[#4A90D9] rounded-full" />
-        </motion.div>
-      </motion.div>
+    </section>
+  );
+}
+
+function Gallery() {
+  const images = [
+    "/gallery/FB_IMG_1769003372137.jpg",
+    "/gallery/FB_IMG_1769003384335.jpg",
+    "/gallery/FB_IMG_1769003406743.jpg",
+    "/gallery/FB_IMG_1769003436565.jpg",
+    "/gallery/FB_IMG_1769003446276.jpg",
+    "/gallery/FB_IMG_1769003490309.jpg",
+    "/gallery/FB_IMG_1769003511687.jpg",
+    "/gallery/FB_IMG_1769003527053.jpg",
+    "/gallery/FB_IMG_1769003563158.jpg",
+    "/gallery/FB_IMG_1769003607194.jpg",
+    "/gallery/FB_IMG_1769003769244.jpg",
+    "/gallery/FB_IMG_1769003782114.jpg",
+    "/gallery/IMG_20250618_191244.jpg",
+    "/gallery/IMG_20250726_172854.jpg",
+    "/gallery/IMG_20250731_093135.jpg",
+    "/gallery/IMG_20251003_125313.jpg",
+  ];
+
+  // Duplicate for seamless loop
+  const duplicatedImages = [...images, ...images];
+
+  return (
+    <section className="pb-16 bg-slate-50 overflow-hidden">
+
+      {/* Scrolling gallery */}
+      <div className="relative">
+        <div className="flex gap-5 animate-scroll hover:[animation-play-state:paused]">
+          {duplicatedImages.map((src, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-72 h-56 md:w-96 md:h-72 rounded-3xl overflow-hidden shadow-lg"
+            >
+              <img
+                src={src}
+                alt={`Klíma szerelés ${(index % images.length) + 1}`}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Hint text */}
+        <p className="text-center text-slate-400 text-sm mt-8 uppercase tracking-wider">
+          Vigye rá az egeret a megállításhoz
+        </p>
+      </div>
     </section>
   );
 }
@@ -556,9 +572,9 @@ function ServiceArea() {
           </p>
           <a
             href={phoneLink}
-            className="inline-flex items-center gap-3 bg-white text-slate-900 px-8 py-4 rounded-full text-lg font-bold hover:bg-blue-50 transition-all duration-300 shadow-xl btn-shine"
+            className="inline-flex items-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300"
           >
-            <Phone className="w-6 h-6" />
+            <Phone className="w-5 h-5" />
             Kérjen ingyenes felmérést!
           </a>
         </AnimatedSection>
@@ -567,7 +583,62 @@ function ServiceArea() {
   );
 }
 
+function ProcessStep({
+  step,
+  index,
+  totalSteps,
+  scrollYProgress,
+}: {
+  step: { icon: React.ComponentType<{ className?: string }>; title: string; description: string };
+  index: number;
+  totalSteps: number;
+  scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
+}) {
+  // First step is always active, others activate when line reaches them
+  const stepProgress = useTransform(
+    scrollYProgress,
+    [Math.max(0, (index - 0.5) / totalSteps), index / totalSteps],
+    index === 0 ? [1.15, 1.15] : [1, 1.15]
+  );
+  const stepOpacity = useTransform(
+    scrollYProgress,
+    [Math.max(0, (index - 0.5) / totalSteps), index / totalSteps],
+    index === 0 ? [1, 1] : [0.5, 1]
+  );
+
+  return (
+    <AnimatedSection delay={index * 0.15}>
+      <div className="relative flex items-start gap-6 group">
+        {/* Step Number */}
+        <motion.div
+          className="w-20 h-20 flex-shrink-0 rounded-full bg-gradient-to-br from-[#4A90D9] to-[#3b82f6] flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-blue-500/30 relative z-10"
+          style={{ scale: stepProgress, opacity: stepOpacity }}
+        >
+          {index + 1}
+        </motion.div>
+
+        {/* Content */}
+        <div className="flex-1 pt-2">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+              <step.icon className="w-6 h-6 text-[#4A90D9]" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-800">{step.title}</h3>
+          </div>
+          <p className="text-slate-500 ml-16">{step.description}</p>
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+}
+
 function Process() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
+
   const steps = [
     {
       icon: PhoneCall,
@@ -603,30 +674,27 @@ function Process() {
           </h2>
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => (
-            <AnimatedSection key={index} delay={index * 0.15}>
-              <div className="relative text-center group">
-                {/* Step Number */}
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#4A90D9] to-[#3b82f6] flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
-                  {index + 1}
-                </div>
+        <div ref={containerRef} className="relative max-w-2xl mx-auto">
+          {/* Background line (gray) */}
+          <div className="absolute left-10 top-10 bottom-10 w-0.5 bg-blue-100" />
 
-                {/* Connector Line */}
-                {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-blue-200 to-transparent" />
-                )}
+          {/* Animated progress line (blue) */}
+          <motion.div
+            className="absolute left-10 top-10 w-0.5 bg-[#4A90D9] origin-top"
+            style={{ scaleY: scrollYProgress, height: "calc(100% - 80px)" }}
+          />
 
-                {/* Icon */}
-                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <step.icon className="w-7 h-7 text-[#4A90D9]" />
-                </div>
-
-                <h3 className="text-xl font-bold text-slate-800 mb-2">{step.title}</h3>
-                <p className="text-slate-500">{step.description}</p>
-              </div>
-            </AnimatedSection>
-          ))}
+          <div className="flex flex-col gap-20">
+            {steps.map((step, index) => (
+              <ProcessStep
+                key={index}
+                step={step}
+                index={index}
+                totalSteps={steps.length}
+                scrollYProgress={scrollYProgress}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -676,9 +744,9 @@ function Contact() {
 
           <a
             href={phoneLink}
-            className="inline-flex items-center gap-3 bg-white text-[#4A90D9] px-10 py-5 rounded-full text-xl font-bold hover:bg-blue-50 transition-all duration-300 shadow-2xl hover:scale-105 btn-shine"
+            className="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-800 px-6 py-3 rounded-xl text-base font-semibold border-2 border-white/50 transition-all duration-300"
           >
-            <Phone className="w-6 h-6" />
+            <Phone className="w-5 h-5" />
             Hívjon most ingyenes konzultációért!
           </a>
         </AnimatedSection>
@@ -692,9 +760,8 @@ function Footer() {
     <footer className="py-12 bg-slate-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-2" style={{ fontFamily: "var(--font-logo), sans-serif" }}>
-            <span className="text-3xl tracking-wide text-[#4A90D9]">KLIMA</span>
-            <span className="text-3xl tracking-wide text-[#4A90D9]">PLUS</span>
+          <div className="flex items-center">
+            <img src="/logo.png" alt="Klima Plus" className="h-8 w-auto" />
           </div>
 
           <div className="text-center md:text-left">
@@ -724,6 +791,7 @@ export default function Home() {
     <main className="min-h-screen">
       <Header />
       <Hero />
+      <Gallery />
       <Features />
       <Services />
       <WhyUs />

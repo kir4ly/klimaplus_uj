@@ -238,3 +238,49 @@
   50% { border-radius: 30% 70% 58% 42% / 45% 55% 45% 55%; }
   75% { border-radius: 70% 30% 42% 58% / 55% 55% 45% 45%; }
 }
+
+/* Gallery scroll animation */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  animation: scroll 12s linear infinite;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Border animation on hover */
+@keyframes border-run {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.btn-border-animate {
+  position: relative;
+  overflow: visible;
+}
+
+.btn-border-animate::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  background-size: 50% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.btn-border-animate:hover::before {
+  opacity: 1;
+  animation: border-run 2s linear infinite;
+}
