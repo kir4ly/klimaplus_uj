@@ -196,21 +196,21 @@ function Hero() {
         <motion.div
           animate={{ y: [-20, 20, -20] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-32 left-[15%] text-blue-200"
+          className="absolute top-32 left-[15%] text-[#4A90D9]"
         >
           <Snowflake className="w-16 h-16" />
         </motion.div>
         <motion.div
           animate={{ y: [20, -20, 20] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-48 right-[20%] text-blue-300/50"
+          className="absolute top-48 right-[20%] text-[#4A90D9]/70"
         >
           <Snowflake className="w-20 h-20" />
         </motion.div>
         <motion.div
           animate={{ y: [-15, 15, -15] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-[10%] text-cyan-200/60"
+          className="absolute bottom-40 left-[10%] text-[#4A90D9]/60"
         >
           <Snowflake className="w-12 h-12" />
         </motion.div>
