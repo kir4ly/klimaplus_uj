@@ -188,33 +188,44 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* Floating Icons */}
-      <motion.div
-        style={{ y, opacity }}
-        className="absolute inset-0 pointer-events-none"
-      >
-        <motion.div
-          animate={{ y: [-20, 20, -20] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-32 left-[15%] text-[#4A90D9]"
-        >
-          <Snowflake className="w-16 h-16" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [20, -20, 20] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-48 right-[20%] text-[#4A90D9]/70"
-        >
-          <Snowflake className="w-20 h-20" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [-15, 15, -15] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-[10%] text-[#4A90D9]/60"
-        >
-          <Snowflake className="w-12 h-12" />
-        </motion.div>
-      </motion.div>
+      {/* Falling Snowflakes - only on sides, not in center */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(70)].map((_, i) => {
+          // 35 on left (0-28%), 35 on right (72-100%)
+          const isLeft = i < 35;
+          const localIndex = isLeft ? i : i - 35;
+          const position = isLeft
+            ? 1 + localIndex * 0.8
+            : 72 + localIndex * 0.8;
+          const size = 10 + (i % 5) * 3;
+          const duration = 7 + (i % 6);
+          // Each snowflake starts at a different vertical position (-10vh to 90vh)
+          // so the screen is already full of snow when page loads
+          const startY = -10 + ((i * 13) % 100);
+          return (
+            <motion.div
+              key={i}
+              className="absolute text-[#4A90D9]/40"
+              style={{
+                left: `${position}%`,
+                top: `${startY}%`,
+              }}
+              animate={{
+                y: ["0vh", `${110 - startY}vh`],
+                rotate: [0, 360],
+              }}
+              transition={{
+                duration: duration,
+                repeat: Infinity,
+                ease: "linear",
+                repeatType: "loop",
+              }}
+            >
+              <Snowflake style={{ width: `${size}px`, height: `${size}px` }} />
+            </motion.div>
+          );
+        })}
+      </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
