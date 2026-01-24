@@ -95,15 +95,15 @@ function Header() {
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="text-slate-600 hover:text-[#4A90D9] font-medium transition-colors relative group"
+                className="text-slate-600 hover:text-[#2563eb] font-medium transition-colors relative group"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#4A90D9] transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#2563eb] transition-all group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -112,11 +112,10 @@ function Header() {
           <div className="hidden md:flex items-center gap-4">
             <a
               href={phoneLink}
-              className="group flex items-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-5 py-2.5 rounded-xl font-semibold transition-all duration-300"
+              className="group flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-500 px-5 py-2.5 rounded-xl font-semibold border-2 border-red-500 shadow-md transition-all duration-300"
             >
-              <Phone className="w-4 h-4 transition-transform group-hover:rotate-12" />
-              <span className="hidden sm:inline">{phoneNumber}</span>
-              <span className="sm:hidden">Hívás</span>
+              <Phone className="w-4 h-4 fill-red-500 transition-transform group-hover:rotate-12" />
+              {phoneNumber}
             </a>
           </div>
 
@@ -143,14 +142,14 @@ function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-slate-700 hover:text-[#4A90D9] font-medium py-2 transition-colors"
+                  className="text-slate-700 hover:text-[#5DA9E9] font-medium py-2 transition-colors"
                 >
                   {item.label}
                 </a>
               ))}
               <a
                 href={phoneLink}
-                className="flex items-center justify-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-5 py-2.5 rounded-xl font-semibold mt-2 transition-all duration-300"
+                className="flex items-center justify-center gap-2 bg-[#5DA9E9] hover:bg-[#4A96D6] text-white px-5 py-2.5 rounded-xl font-semibold mt-2 transition-all duration-300"
               >
                 <Phone className="w-4 h-4" />
                 {phoneNumber}
@@ -188,41 +187,38 @@ function Hero() {
         </motion.div>
       </div>
 
-      {/* Falling Snowflakes - only on sides, not in center */}
+      {/* Static Snowflakes - randomly scattered on sides */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(70)].map((_, i) => {
-          // 35 on left (0-28%), 35 on right (72-100%)
+          // Pseudo-random positioning using prime numbers for variation
+          const seed1 = (i * 31 + 7) % 100;
+          const seed2 = (i * 47 + 13) % 100;
+          const seed3 = (i * 23 + 5) % 100;
+
+          // Left side (0-30%) or right side (70-100%)
           const isLeft = i < 35;
-          const localIndex = isLeft ? i : i - 35;
-          const position = isLeft
-            ? 1 + localIndex * 0.8
-            : 72 + localIndex * 0.8;
-          const size = 10 + (i % 5) * 3;
-          const duration = 7 + (i % 6);
-          // Each snowflake starts at a different vertical position (-10vh to 90vh)
-          // so the screen is already full of snow when page loads
-          const startY = -10 + ((i * 13) % 100);
+          const horizontalPos = isLeft
+            ? 2 + (seed1 * 0.28)
+            : 70 + (seed1 * 0.28);
+
+          const topPosition = 3 + (seed2 * 0.9);
+          const size = 8 + (seed3 % 5) * 4;
+          const opacity = 0.25 + (seed3 % 4) * 0.12;
+          const rotation = (seed1 * 3.6);
+
           return (
-            <motion.div
+            <div
               key={i}
-              className="absolute text-[#4A90D9]/40"
+              className="absolute text-[#5DA9E9]"
               style={{
-                left: `${position}%`,
-                top: `${startY}%`,
-              }}
-              animate={{
-                y: ["0vh", `${110 - startY}vh`],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: duration,
-                repeat: Infinity,
-                ease: "linear",
-                repeatType: "loop",
+                left: `${horizontalPos}%`,
+                top: `${topPosition}%`,
+                opacity: opacity,
+                transform: `rotate(${rotation}deg)`,
               }}
             >
               <Snowflake style={{ width: `${size}px`, height: `${size}px` }} />
-            </motion.div>
+            </div>
           );
         })}
       </div>
@@ -235,7 +231,7 @@ function Hero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-[#4A90D9] px-4 py-2 rounded-full text-sm font-medium mb-8"
+            className="inline-flex items-center gap-2 bg-white text-slate-800 px-4 py-2 rounded-full text-sm font-semibold mb-8 border-2 border-slate-200 shadow-md"
           >
             <MapPin className="w-4 h-4" />
             Celldömölk és környéke
@@ -280,10 +276,6 @@ function Hero() {
             className="text-lg text-slate-500 mb-10 max-w-2xl mx-auto"
           >
             Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.
-            <br />
-            <span className="text-[#4A90D9] font-semibold">
-              Rejtett költségek nélkül, rövid határidővel!
-            </span>
           </motion.p>
 
           {/* CTA Buttons */}
@@ -291,20 +283,14 @@ function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex flex-col gap-4 justify-center items-center"
           >
             <a
               href={phoneLink}
-              className="group flex items-center gap-3 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300"
+              className="group flex items-center justify-center gap-3 bg-white hover:bg-red-50 text-red-500 px-10 py-4 rounded-2xl text-xl font-bold border-2 border-red-500 shadow-lg transition-all duration-300"
             >
-              <Phone className="w-5 h-5 transition-transform group-hover:rotate-12" />
+              <Phone className="w-6 h-6 fill-red-500 transition-transform group-hover:rotate-12" />
               Hívjon Most!
-            </a>
-            <a
-              href="#szolgaltatasok"
-              className="group flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-xl text-base font-semibold border border-slate-200 transition-all duration-300"
-            >
-              Szolgáltatások
             </a>
           </motion.div>
 
@@ -317,6 +303,9 @@ function Hero() {
 
 function Gallery() {
   const images = [
+    "/gallery/2023-07-04 (2).webp",
+    "/gallery/2023-07-04 (3).webp",
+    "/gallery/2023-07-04 (4).webp",
     "/gallery/FB_IMG_1769003372137.jpg",
     "/gallery/FB_IMG_1769003384335.jpg",
     "/gallery/FB_IMG_1769003406743.jpg",
@@ -392,9 +381,9 @@ function Features() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <AnimatedSection key={index} delay={index * 0.1}>
-              <div className="flex items-center justify-center gap-4 group">
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 group-hover:from-blue-100 group-hover:to-cyan-100 transition-colors duration-300">
-                  <feature.icon className="w-8 h-8 text-[#4A90D9]" />
+              <div className="flex items-center justify-center gap-4 group bg-white border-2 border-slate-200 rounded-2xl p-6 shadow-md hover:border-[#5DA9E9] hover:shadow-lg transition-all duration-300">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#5DA9E9] to-[#3b82f6] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-800">{feature.title}</h3>
@@ -455,7 +444,7 @@ function Services() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-16">
-          <span className="inline-block text-[#4A90D9] font-semibold text-sm uppercase tracking-wider mb-4">
+          <span className="inline-block text-[#5DA9E9] font-semibold text-sm uppercase tracking-wider mb-4">
             Szolgáltatásaink
           </span>
           <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
@@ -469,8 +458,8 @@ function Services() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
             <AnimatedSection key={index} delay={index * 0.1}>
-              <div className="group bg-white rounded-3xl p-8 shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-500 card-hover h-full">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#4A90D9] to-[#3b82f6] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="group bg-white rounded-3xl p-8 border-2 border-slate-200 shadow-md hover:border-[#5DA9E9] hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-500 card-hover h-full">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#5DA9E9] to-[#3b82f6] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <service.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-3">{service.title}</h3>
@@ -478,7 +467,7 @@ function Services() {
                 <ul className="space-y-2">
                   {service.features.map((feature, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
-                      <CheckCircle className="w-4 h-4 text-[#4A90D9]" />
+                      <CheckCircle className="w-4 h-4 text-[#5DA9E9]" />
                       {feature}
                     </li>
                   ))}
@@ -507,7 +496,7 @@ function WhyUs() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <AnimatedSection>
-            <span className="inline-block text-[#4A90D9] font-semibold text-sm uppercase tracking-wider mb-4">
+            <span className="inline-block text-[#5DA9E9] font-semibold text-sm uppercase tracking-wider mb-4">
               Miért minket?
             </span>
             <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
@@ -518,7 +507,7 @@ function WhyUs() {
               Tapasztalt csapatunk minden projektnél a legmagasabb színvonalat képviseli.
             </p>
 
-            <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-[#4A90D9] to-[#3b82f6] rounded-2xl text-white">
+            <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-[#5DA9E9] to-[#3b82f6] rounded-2xl text-white">
               <ThumbsUp className="w-12 h-12" />
               <div>
                 <p className="text-3xl font-black">100%</p>
@@ -530,8 +519,10 @@ function WhyUs() {
           <div className="grid grid-cols-2 gap-4">
             {reasons.map((reason, index) => (
               <AnimatedSection key={index} delay={index * 0.1}>
-                <div className="group p-6 rounded-2xl bg-slate-50 hover:bg-gradient-to-br hover:from-blue-50 hover:to-cyan-50 transition-all duration-300">
-                  <reason.icon className="w-10 h-10 text-[#4A90D9] mb-4 group-hover:scale-110 transition-transform" />
+                <div className="group p-6 rounded-2xl bg-white border-2 border-slate-200 shadow-md hover:border-[#5DA9E9] hover:shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5DA9E9] to-[#3b82f6] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <reason.icon className="w-6 h-6 text-white" />
+                  </div>
                   <h3 className="font-bold text-slate-800 mb-1">{reason.title}</h3>
                   <p className="text-sm text-slate-500">{reason.desc}</p>
                 </div>
@@ -545,49 +536,40 @@ function WhyUs() {
 }
 
 function ServiceArea() {
-  const areas = ["Vas megye", "Veszprém megye", "Győr-Moson-Sopron megye", "Zala megye"];
+  const areas = ["Vas vármegye", "Veszprém vármegye", "Győr-Moson-Sopron vármegye", "Zala vármegye"];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <AnimatedSection className="text-center mb-16">
-          <span className="inline-block text-blue-400 font-semibold text-sm uppercase tracking-wider mb-4">
-            Szolgáltatási körzet
-          </span>
-          <h2 className="text-4xl md:text-5xl font-black mb-6">
-            Széles körzetben <span className="text-blue-400">vállaljuk</span>
+    <section className="py-24 bg-slate-50 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <AnimatedSection className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-0.5 bg-[#5DA9E9]" />
+            <span className="text-[#5DA9E9] font-semibold text-sm uppercase tracking-wider">
+              Szolgáltatási terület
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
+            NYUGAT-<span className="gradient-text">DUNÁNTÚL</span>
           </h2>
+          <p className="text-lg text-slate-500 max-w-xl">
+            Szolgáltatásainkat az alábbi megyékben vállaljuk. Gyors kiszállás, megbízható munka.
+          </p>
         </AnimatedSection>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {areas.map((area, index) => (
-            <AnimatedSection key={index} delay={index * 0.1}>
-              <div className="group p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 text-center">
-                <MapPin className="w-8 h-8 text-blue-400 mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                <p className="font-semibold">{area}</p>
+        <AnimatedSection>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {areas.map((area, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-lg hover:border-[#5DA9E9] hover:shadow-xl transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#5DA9E9] flex items-center justify-center mb-4">
+                  <MapPin className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="font-bold text-slate-800">{area}</h3>
               </div>
-            </AnimatedSection>
-          ))}
-        </div>
-
-        <AnimatedSection className="text-center">
-          <p className="text-slate-400 mb-8">
-            Székhely: <span className="text-white font-semibold">Celldömölk</span> – innen
-            indulunk minden helyszínre
-          </p>
-          <a
-            href={phoneLink}
-            className="inline-flex items-center gap-2 bg-[#4A90D9] hover:bg-[#3A7BC8] text-white px-6 py-3 rounded-xl text-base font-semibold transition-all duration-300"
-          >
-            <Phone className="w-5 h-5" />
-            Kérjen ingyenes felmérést!
-          </a>
+            ))}
+          </div>
         </AnimatedSection>
       </div>
     </section>
@@ -622,7 +604,7 @@ function ProcessStep({
       <div className="relative flex items-start gap-6 group">
         {/* Step Number */}
         <motion.div
-          className="w-20 h-20 flex-shrink-0 rounded-full bg-gradient-to-br from-[#4A90D9] to-[#3b82f6] flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-blue-500/30 relative z-10"
+          className="w-20 h-20 flex-shrink-0 rounded-full bg-gradient-to-br from-[#5DA9E9] to-[#3b82f6] flex items-center justify-center text-white text-3xl font-black shadow-lg shadow-blue-500/30 relative z-10"
           style={{ scale: stepProgress, opacity: stepOpacity }}
         >
           {index + 1}
@@ -631,8 +613,8 @@ function ProcessStep({
         {/* Content */}
         <div className="flex-1 pt-2">
           <div className="flex items-center gap-4 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-              <step.icon className="w-6 h-6 text-[#4A90D9]" />
+            <div className="w-12 h-12 rounded-xl bg-white border-2 border-slate-800 flex items-center justify-center">
+              <step.icon className="w-6 h-6 text-slate-800" />
             </div>
             <h3 className="text-xl font-bold text-slate-800">{step.title}</h3>
           </div>
@@ -677,7 +659,7 @@ function Process() {
     <section id="folyamat" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <AnimatedSection className="text-center mb-16">
-          <span className="inline-block text-[#4A90D9] font-semibold text-sm uppercase tracking-wider mb-4">
+          <span className="inline-block text-[#5DA9E9] font-semibold text-sm uppercase tracking-wider mb-4">
             Folyamat
           </span>
           <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
@@ -691,7 +673,7 @@ function Process() {
 
           {/* Animated progress line (blue) */}
           <motion.div
-            className="absolute left-10 top-10 w-0.5 bg-[#4A90D9] origin-top"
+            className="absolute left-10 top-10 w-0.5 bg-[#5DA9E9] origin-top"
             style={{ scaleY: scrollYProgress, height: "calc(100% - 80px)" }}
           />
 
@@ -716,7 +698,7 @@ function Contact() {
   return (
     <section
       id="kapcsolat"
-      className="py-24 bg-gradient-to-br from-[#4A90D9] via-[#2563eb] to-[#0ea5e9] text-white relative overflow-hidden"
+      className="py-24 bg-gradient-to-br from-[#5DA9E9] via-[#2563eb] to-[#0ea5e9] text-white relative overflow-hidden"
     >
       {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -768,29 +750,123 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="py-12 bg-slate-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center">
-            <img src="/logo.png" alt="Klima Plus" className="h-8 w-auto" />
+    <footer className="relative bg-slate-900 text-white overflow-hidden">
+      {/* Wave SVG separator */}
+      <div className="absolute top-0 left-0 right-0 -translate-y-[99%]">
+        <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+          <path d="M0 120L48 110C96 100 192 80 288 70C384 60 480 60 576 65C672 70 768 80 864 85C960 90 1056 90 1152 85C1248 80 1344 70 1392 65L1440 60V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z" fill="#0f172a"/>
+        </svg>
+      </div>
+
+      {/* Decorative snowflakes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.03]">
+        {[...Array(20)].map((_, i) => {
+          const seed1 = (i * 37 + 11) % 100;
+          const seed2 = (i * 53 + 17) % 100;
+          const size = 40 + (seed1 % 8) * 20;
+          return (
+            <Snowflake
+              key={i}
+              className="absolute text-white"
+              style={{
+                left: `${seed1}%`,
+                top: `${seed2}%`,
+                width: size,
+                height: size,
+              }}
+            />
+          );
+        })}
+      </div>
+
+      <div className="relative pt-20 pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Main footer content */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+            {/* Brand section */}
+            <div className="lg:col-span-5">
+                            {/* Contact cards */}
+              <div className="flex gap-4 mb-8">
+                <a
+                  href={phoneLink}
+                  className="group flex items-center gap-4 bg-slate-800/50 hover:bg-[#5DA9E9] px-5 py-4 rounded-2xl transition-all duration-300"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-[#5DA9E9] group-hover:bg-white flex items-center justify-center flex-shrink-0 transition-colors">
+                    <Phone className="w-5 h-5 text-white group-hover:text-[#5DA9E9] transition-colors" />
+                  </div>
+                  <div>
+                    <p className="text-slate-500 group-hover:text-blue-100 text-sm transition-colors">Hívjon most</p>
+                    <p className="text-white font-bold">{phoneNumber}</p>
+                  </div>
+                </a>
+
+                <div className="flex items-center gap-4 bg-slate-800/50 px-5 py-4 rounded-2xl">
+                  <div className="w-12 h-12 rounded-xl bg-[#5DA9E9] flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-slate-500 text-sm">Székhely</p>
+                    <p className="text-white font-bold">Celldömölk</p>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-slate-400 text-lg leading-relaxed max-w-md">
+                Professzionális klímaszolgáltatás Nyugat-Dunántúlon. Telepítés, karbantartás, javítás - minden egy kézből.
+              </p>
+            </div>
+
+            {/* Quick links */}
+            <div className="lg:col-span-3 lg:col-start-7">
+              <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+                <div className="w-8 h-0.5 bg-[#5DA9E9]" />
+                Navigáció
+              </h3>
+              <nav className="flex flex-col gap-3">
+                {[
+                  { href: "#szolgaltatasok", label: "Szolgáltatások" },
+                  { href: "#rolunk", label: "Rólunk" },
+                  { href: "#folyamat", label: "Folyamat" },
+                  { href: "#kapcsolat", label: "Kapcsolat" },
+                ].map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="text-slate-400 hover:text-[#5DA9E9] transition-colors flex items-center gap-2 group"
+                  >
+                    <ChevronRight className="w-4 h-4 opacity-0 -ml-6 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* Services */}
+            <div className="lg:col-span-3">
+              <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+                <div className="w-8 h-0.5 bg-[#5DA9E9]" />
+                Szolgáltatások
+              </h3>
+              <nav className="flex flex-col gap-3">
+                {["Klíma telepítés", "Karbantartás", "Tisztítás", "Javítás"].map((service) => (
+                  <span key={service} className="text-slate-400 flex items-center gap-2">
+                    <Snowflake className="w-3 h-3 text-[#5DA9E9]" />
+                    {service}
+                  </span>
+                ))}
+              </nav>
+            </div>
           </div>
 
-          <div className="text-center md:text-left">
-            <p className="font-semibold text-lg">Klíma Plus Cell Kft.</p>
-            <p className="text-slate-400">Celldömölk</p>
+          {/* Bottom bar */}
+          <div className="pt-8 border-t border-slate-800">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <p className="text-slate-500 text-sm">
+                © {new Date().getFullYear()} Klíma Plus Cell Kft. Minden jog fenntartva.
+              </p>
+
+            </div>
           </div>
-
-          <a
-            href={phoneLink}
-            className="flex items-center gap-2 text-[#3b82f6] hover:text-blue-400 transition-colors font-semibold"
-          >
-            <Phone className="w-5 h-5" />
-            {phoneNumber}
-          </a>
-        </div>
-
-        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-slate-500 text-sm">
-          © {new Date().getFullYear()} Klíma Plus Cell Kft. Minden jog fenntartva.
         </div>
       </div>
     </footer>
