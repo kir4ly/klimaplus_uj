@@ -284,22 +284,22 @@ function Hero() {
 function Gallery() {
   const images = [
     "/gallery/2023-07-04 (4).webp",
-    "/gallery/FB_IMG_1769003372137.jpg",
-    "/gallery/FB_IMG_1769003384335.jpg",
-    "/gallery/FB_IMG_1769003406743.jpg",
-    "/gallery/FB_IMG_1769003436565.jpg",
-    "/gallery/FB_IMG_1769003446276.jpg",
-    "/gallery/FB_IMG_1769003490309.jpg",
-    "/gallery/FB_IMG_1769003511687.jpg",
-    "/gallery/FB_IMG_1769003527053.jpg",
-    "/gallery/FB_IMG_1769003563158.jpg",
-    "/gallery/FB_IMG_1769003607194.jpg",
-    "/gallery/FB_IMG_1769003769244.jpg",
-    "/gallery/FB_IMG_1769003782114.jpg",
-    "/gallery/IMG_20250618_191244.jpg",
-    "/gallery/IMG_20250726_172854.jpg",
-    "/gallery/IMG_20250731_093135.jpg",
-    "/gallery/IMG_20251003_125313.jpg",
+    "/gallery/FB_IMG_1769003372137.webp",
+    "/gallery/FB_IMG_1769003384335.webp",
+    "/gallery/FB_IMG_1769003406743.webp",
+    "/gallery/FB_IMG_1769003436565.webp",
+    "/gallery/FB_IMG_1769003446276.webp",
+    "/gallery/FB_IMG_1769003490309.webp",
+    "/gallery/FB_IMG_1769003511687.webp",
+    "/gallery/FB_IMG_1769003527053.webp",
+    "/gallery/FB_IMG_1769003563158.webp",
+    "/gallery/FB_IMG_1769003607194.webp",
+    "/gallery/FB_IMG_1769003769244.webp",
+    "/gallery/FB_IMG_1769003782114.webp",
+    "/gallery/IMG_20250618_191244.webp",
+    "/gallery/IMG_20250726_172854.webp",
+    "/gallery/IMG_20250731_093135.webp",
+    "/gallery/IMG_20251003_125313.webp",
   ];
 
   const duplicatedImages = [...images, ...images];
@@ -424,13 +424,13 @@ function Services() {
 // ============================================
 function MaintenanceGallery() {
   const images = [
-    "/gallery/FB_IMG_1769003511687.jpg",
-    "/gallery/FB_IMG_1769003607194.jpg",
-    "/gallery/FB_IMG_1769003782114.jpg",
-    "/gallery/FB_IMG_1769336721705.jpg",
-    "/gallery/FB_IMG_1769336751344.jpg",
-    "/gallery/FB_IMG_1769336957384.jpg",
-    "/gallery/IMG_20251211_094143.jpg",
+    "/gallery/FB_IMG_1769003511687.webp",
+    "/gallery/FB_IMG_1769003607194.webp",
+    "/gallery/FB_IMG_1769003782114.webp",
+    "/gallery/FB_IMG_1769336721705.webp",
+    "/gallery/FB_IMG_1769336751344.webp",
+    "/gallery/FB_IMG_1769336957384.webp",
+    "/gallery/IMG_20251211_094143.webp",
   ];
 
   return (
