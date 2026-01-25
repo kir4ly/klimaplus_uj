@@ -72,8 +72,8 @@ function Header() {
         isScrolled ? "bg-[#0a0a0a]" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a href="#" className="-ml-2">
             <img
@@ -201,7 +201,7 @@ function Snowflakes() {
   ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden md:block">
       {snowflakes.map((flake, i) => (
         <div
           key={i}
@@ -225,7 +225,7 @@ function Snowflakes() {
 // ============================================
 function Hero() {
   return (
-    <section className="section-black pt-40 pb-8 relative overflow-hidden noise">
+    <section className="section-black pt-28 md:pt-40 pb-8 relative overflow-hidden noise">
       <Snowflakes />
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <div className="text-center">
@@ -239,9 +239,9 @@ function Hero() {
             <img
               src="/logo-white.svg"
               alt="Klíma Plus"
-              className="w-full max-w-[700px] mx-auto h-auto"
+              className="w-full max-w-[280px] md:max-w-[500px] lg:max-w-[700px] mx-auto h-auto"
             />
-            <p className="text-xl md:text-2xl text-white/60 tracking-[0.4em] uppercase mt-6 font-light">
+            <p className="text-base md:text-xl lg:text-2xl text-white/60 tracking-[0.2em] md:tracking-[0.4em] uppercase mt-4 md:mt-6 font-light">
               Klímatechnika
             </p>
           </motion.div>
@@ -253,10 +253,10 @@ function Hero() {
             transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="mb-8 mt-8"
           >
-            <p className="text-white/70 text-lg md:text-xl mb-3">
+            <p className="text-white/70 text-base md:text-lg lg:text-xl mb-2 md:mb-3 px-4 md:px-0">
               Légkondicionáló szerelés és karbantartás
             </p>
-            <p className="text-white/40 text-sm md:text-base">
+            <p className="text-white/40 text-xs md:text-sm lg:text-base px-4 md:px-0">
               Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.
             </p>
           </motion.div>
@@ -342,13 +342,13 @@ function Gallery() {
         {duplicatedImages.map((src, index) => (
           <div
             key={index}
-            className="flex-shrink-0 w-72 h-52 md:w-96 md:h-64 overflow-hidden rounded-lg relative select-none"
+            className="flex-shrink-0 w-60 h-44 md:w-72 md:h-52 lg:w-96 lg:h-64 overflow-hidden rounded-lg relative select-none"
           >
             <Image
               src={src}
               alt={`Munkáink ${(index % images.length) + 1}`}
               fill
-              sizes="(max-width: 768px) 288px, 384px"
+              sizes="(max-width: 768px) 240px, (max-width: 1024px) 288px, 384px"
               className="object-cover pointer-events-none"
               loading="lazy"
               draggable={false}
@@ -389,7 +389,7 @@ function Services() {
 
   return (
     <section id="szolgaltatasok" className="section-white py-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <Reveal>
           <h2 className="text-display text-[clamp(2rem,6vw,4rem)] mb-12">
             SZOLGÁLTATÁSOK
@@ -474,7 +474,7 @@ function ServiceArea() {
 
   return (
     <section className="section-white py-16">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <Reveal>
           <h2 className="text-display text-[clamp(2rem,6vw,4rem)] mb-2">
             NYUGAT-DUNÁNTÚL
@@ -485,15 +485,15 @@ function ServiceArea() {
         </Reveal>
 
         <Reveal delay={0.2}>
-          <div className="flex flex-wrap gap-3 md:gap-6">
+          <div className="flex flex-col md:flex-row md:flex-wrap gap-2 md:gap-6">
             {areas.map((area, index) => (
               <span
                 key={index}
-                className="text-display text-lg md:text-2xl text-neutral-400 hover:text-neutral-900 transition-colors cursor-default"
+                className="text-display text-base md:text-lg lg:text-2xl text-neutral-400 hover:text-neutral-900 transition-colors cursor-default"
               >
                 {area}
                 {index < areas.length - 1 && (
-                  <span className="text-neutral-300 mx-3 md:mx-6">/</span>
+                  <span className="hidden md:inline text-neutral-300 mx-3 md:mx-6">/</span>
                 )}
               </span>
             ))}
@@ -606,10 +606,10 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="section-black py-16 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <footer className="section-black py-12 md:py-16 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         {/* Top Section */}
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-8 md:mb-12">
           {/* Logo & Description */}
           <div>
             <img

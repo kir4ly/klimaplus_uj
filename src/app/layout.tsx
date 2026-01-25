@@ -16,12 +16,17 @@ const bebasNeue = Bebas_Neue({
 
 export const metadata: Metadata = {
   title: "Klíma Plus | Légkondicionáló szerelés - Celldömölk",
-  description: "Professzionális klímamegoldások Celldömölkön. Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében. 10 év garancia, rejtett költségek nélkül.",
+  description: "Professzionális klímamegoldások Celldömölkön. Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.",
   keywords: ["klíma", "légkondicionáló", "klímaszerelés", "klíma telepítés", "klíma karbantartás", "Celldömölk", "Vas megye", "klíma tisztítás"],
   authors: [{ name: "Klíma Plus Cell Kft." }],
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+  },
   openGraph: {
     title: "Klíma Plus | Légkondicionáló szerelés - Celldömölk",
-    description: "Professzionális klímamegoldások Celldömölkön. 10 év garancia, rejtett költségek nélkül, rövid határidővel!",
+    description: "Professzionális klímamegoldások Celldömölkön. Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.",
     locale: "hu_HU",
     type: "website",
   },
