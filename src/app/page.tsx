@@ -283,35 +283,129 @@ function Hero() {
 // ============================================
 function Gallery() {
   const images = [
-    "/gallery/2023-07-04 (4).webp",
-    "/gallery/FB_IMG_1769003372137.webp",
-    "/gallery/FB_IMG_1769003384335.webp",
-    "/gallery/FB_IMG_1769003406743.webp",
-    "/gallery/FB_IMG_1769003436565.webp",
-    "/gallery/FB_IMG_1769003446276.webp",
-    "/gallery/FB_IMG_1769003490309.webp",
-    "/gallery/FB_IMG_1769003511687.webp",
-    "/gallery/FB_IMG_1769003527053.webp",
-    "/gallery/FB_IMG_1769003563158.webp",
-    "/gallery/FB_IMG_1769003607194.webp",
-    "/gallery/FB_IMG_1769003769244.webp",
-    "/gallery/FB_IMG_1769003782114.webp",
-    "/gallery/FB_IMG_1769336721705.webp",
-    "/gallery/FB_IMG_1769336751344.webp",
-    "/gallery/FB_IMG_1769336957384.webp",
-    "/gallery/IMG_20250618_191244.webp",
-    "/gallery/IMG_20250726_172854.webp",
-    "/gallery/IMG_20250731_093135.webp",
-    "/gallery/IMG_20251003_125313.webp",
-    "/gallery/IMG_20251211_094143.webp",
+    "/hero-gallery/FB_IMG_1769003406743.jpg",
+    "/hero-gallery/FB_IMG_1769003436565.jpg",
+    "/hero-gallery/FB_IMG_1769003446276.jpg",
+    "/hero-gallery/FB_IMG_1769003490309.jpg",
+    "/hero-gallery/FB_IMG_1769003527053.jpg",
+    "/hero-gallery/FB_IMG_1769003563158.jpg",
+    "/hero-gallery/FB_IMG_1769337123974.jpg",
+    "/hero-gallery/FB_IMG_1769337165156.jpg",
+    "/hero-gallery/FB_IMG_1769338707900.jpg",
+    "/hero-gallery/FB_IMG_1769338841605.jpg",
+    "/hero-gallery/FB_IMG_1769338868092.jpg",
+    "/hero-gallery/FB_IMG_1769338884707.jpg",
+    "/hero-gallery/FB_IMG_1769338940174.jpg",
+    "/hero-gallery/IMG_20230901_123819.jpg",
+    "/hero-gallery/IMG_20230922_144348.jpg",
+    "/hero-gallery/IMG_20230927_131342.jpg",
+    "/hero-gallery/IMG_20240412_142224.jpg",
+    "/hero-gallery/IMG_20240412_142309.jpg",
+    "/hero-gallery/IMG_20240412_142448.jpg",
+    "/hero-gallery/IMG_20240624_132640.jpg",
+    "/hero-gallery/IMG_20240624_141653.jpg",
+    "/hero-gallery/IMG_20250618_191244.jpg",
+    "/hero-gallery/IMG_20250726_172854.jpg",
+    "/hero-gallery/IMG_20250731_093135.jpg",
+    "/hero-gallery/IMG_20251003_125313.jpg",
+    "/hero-gallery/IMG_20251211_094143.jpg",
+    "/hero-gallery/Messenger_creation_B88C9D5E-168B-4828-9F78-832886349FCD.jpeg",
   ];
 
   // Duplicate images for seamless infinite scroll
   const duplicatedImages = [...images, ...images, ...images];
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const animationRef = useRef<number | null>(null);
+  const [cursorStyle, setCursorStyle] = useState<"grab" | "grabbing">("grab");
+
+  // Auto-scroll animation
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const scrollSpeed = 1; // pixels per frame
+
+    // Wait for images to load and get proper dimensions
+    const startAnimation = () => {
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+
+      if (scrollWidth <= clientWidth) {
+        // Content not ready yet, retry
+        requestAnimationFrame(startAnimation);
+        return;
+      }
+
+      const oneThird = scrollWidth / 3;
+      container.scrollLeft = oneThird;
+
+      const animate = () => {
+        if (!isDraggingRef.current && container) {
+          container.scrollLeft += scrollSpeed;
+
+          // Reset to beginning for infinite loop
+          if (container.scrollLeft >= oneThird * 2) {
+            container.scrollLeft = oneThird;
+          }
+        }
+        animationRef.current = requestAnimationFrame(animate);
+      };
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    // Small delay to ensure DOM is ready
+    setTimeout(startAnimation, 100);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    isDraggingRef.current = true;
+    setCursorStyle("grabbing");
+    startXRef.current = e.pageX - containerRef.current.offsetLeft;
+    scrollLeftRef.current = containerRef.current.scrollLeft;
+  };
+
+  const handleMouseUp = () => {
+    isDraggingRef.current = false;
+    setCursorStyle("grab");
+  };
+
+  const handleMouseLeave = () => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      setCursorStyle("grab");
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDraggingRef.current || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - startXRef.current) * 2;
+    containerRef.current.scrollLeft = scrollLeftRef.current - walk;
+  };
+
   return (
     <section className="section-black pt-8 pb-16 overflow-hidden">
-      <div className="gallery-scroll-container">
+      <div
+        ref={containerRef}
+        className={`gallery-scroll-container ${cursorStyle === "grabbing" ? "cursor-grabbing" : "cursor-grab"}`}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+      >
         <div className="gallery-scroll-track">
           {duplicatedImages.map((src, index) => (
             <div
@@ -493,9 +587,9 @@ function Process() {
 
   const steps = [
     { number: "01", title: "KAPCSOLATFELVÉTEL", desc: "Hívjon fel és egyeztessünk" },
-    { number: "02", title: "FELMÉRÉS", desc: "Ingyenes helyszíni felmérés" },
+    { number: "02", title: "FELMÉRÉS", desc: "Celldömölk és környékén ingyenes helyszíni felmérés." },
     { number: "03", title: "KIVITELEZÉS", desc: "Szakszerű telepítés, tisztítás vagy javítás." },
-    { number: "04", title: "GARANCIA", desc: "A garancia a készüléktől függ." },
+    { number: "04", title: "GARANCIA", desc: "Akár 10 év garanciával." },
   ];
 
   return (
@@ -554,9 +648,18 @@ function Contact() {
         <Reveal delay={0.1}>
           <a
             href={phoneLink}
-            className="text-display text-[clamp(1.5rem,8vw,5rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-8"
+            className="text-display text-[clamp(1.5rem,8vw,5rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-4"
           >
             {phoneNumber}
+          </a>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <a
+            href="mailto:klimaplushungary@gmail.com"
+            className="text-neutral-500 hover:text-neutral-900 text-lg md:text-xl transition-colors inline-block mb-8"
+          >
+            klimaplushungary@gmail.com
           </a>
         </Reveal>
 
