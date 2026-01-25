@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Outfit, DM_Sans, Bebas_Neue } from "next/font/google";
+import { DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-});
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -15,7 +9,7 @@ const dmSans = DM_Sans({
 });
 
 const bebasNeue = Bebas_Neue({
-  variable: "--font-logo",
+  variable: "--font-bebas",
   subsets: ["latin", "latin-ext"],
   weight: ["400"],
 });
@@ -40,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu" className="scroll-smooth">
-      <body className={`${outfit.variable} ${dmSans.variable} ${bebasNeue.variable} antialiased`}>
+      <body className={`${dmSans.variable} ${bebasNeue.variable} antialiased`}>
         {children}
       </body>
     </html>
