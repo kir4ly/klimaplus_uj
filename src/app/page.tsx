@@ -410,14 +410,14 @@ function Gallery() {
           {duplicatedImages.map((src, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-60 h-44 md:w-72 md:h-52 lg:w-96 lg:h-64 overflow-hidden rounded-lg relative select-none"
+              className="flex-shrink-0 w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 overflow-hidden rounded-lg relative select-none"
             >
               <Image
                 src={src}
                 alt={`Munkáink ${(index % images.length) + 1}`}
                 fill
-                sizes="(max-width: 768px) 240px, (max-width: 1024px) 288px, 384px"
-                className="object-cover pointer-events-none"
+                sizes="(max-width: 768px) 288px, (max-width: 1024px) 320px, 384px"
+                className="object-cover object-center pointer-events-none"
                 loading="lazy"
                 draggable={false}
               />
