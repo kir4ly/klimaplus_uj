@@ -296,65 +296,40 @@ function Gallery() {
     "/gallery/FB_IMG_1769003607194.webp",
     "/gallery/FB_IMG_1769003769244.webp",
     "/gallery/FB_IMG_1769003782114.webp",
+    "/gallery/FB_IMG_1769336721705.webp",
+    "/gallery/FB_IMG_1769336751344.webp",
+    "/gallery/FB_IMG_1769336957384.webp",
     "/gallery/IMG_20250618_191244.webp",
     "/gallery/IMG_20250726_172854.webp",
     "/gallery/IMG_20250731_093135.webp",
     "/gallery/IMG_20251003_125313.webp",
+    "/gallery/IMG_20251211_094143.webp",
   ];
 
-  const duplicatedImages = [...images, ...images];
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
-    setScrollLeft(containerRef.current?.scrollLeft || 0);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (containerRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2;
-    if (containerRef.current) {
-      containerRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
+  // Duplicate images for seamless infinite scroll
+  const duplicatedImages = [...images, ...images, ...images];
 
   return (
     <section className="section-black pt-8 pb-16 overflow-hidden">
-      <div
-        ref={containerRef}
-        className={`flex gap-4 overflow-x-auto scrollbar-hide cursor-grab ${isDragging ? 'cursor-grabbing' : ''} ${!isDragging ? 'animate-scroll' : ''}`}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {duplicatedImages.map((src, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-60 h-44 md:w-72 md:h-52 lg:w-96 lg:h-64 overflow-hidden rounded-lg relative select-none"
-          >
-            <Image
-              src={src}
-              alt={`Munkáink ${(index % images.length) + 1}`}
-              fill
-              sizes="(max-width: 768px) 240px, (max-width: 1024px) 288px, 384px"
-              className="object-cover pointer-events-none"
-              loading="lazy"
-              draggable={false}
-            />
-          </div>
-        ))}
+      <div className="gallery-scroll-container">
+        <div className="gallery-scroll-track">
+          {duplicatedImages.map((src, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-60 h-44 md:w-72 md:h-52 lg:w-96 lg:h-64 overflow-hidden rounded-lg relative select-none"
+            >
+              <Image
+                src={src}
+                alt={`Munkáink ${(index % images.length) + 1}`}
+                fill
+                sizes="(max-width: 768px) 240px, (max-width: 1024px) 288px, 384px"
+                className="object-cover pointer-events-none"
+                loading="lazy"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -431,6 +406,8 @@ function MaintenanceGallery() {
     "/gallery/FB_IMG_1769336751344.webp",
     "/gallery/FB_IMG_1769336957384.webp",
     "/gallery/IMG_20251211_094143.webp",
+    "/gallery/FB_IMG_1769003446276.webp",
+    "/gallery/FB_IMG_1769003490309.webp",
   ];
 
   return (

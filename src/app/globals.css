@@ -131,12 +131,30 @@
   animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.animate-scroll {
-  animation: scroll 40s linear infinite;
+/* Gallery infinite scroll */
+.gallery-scroll-container {
+  overflow: hidden;
+  width: 100%;
 }
 
-.animate-scroll:hover {
+.gallery-scroll-track {
+  display: flex;
+  gap: 1rem;
+  animation: galleryScroll 60s linear infinite;
+  width: fit-content;
+}
+
+.gallery-scroll-track:hover {
   animation-play-state: paused;
+}
+
+@keyframes galleryScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
 }
 
 /* Hide scrollbar */
