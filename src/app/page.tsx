@@ -552,14 +552,14 @@ function AboutUs() {
 
         <Reveal delay={0.1}>
           <div className="max-w-3xl mb-12">
-            <p className="text-neutral-600 text-base md:text-lg leading-relaxed mb-4">
+            <p className="text-neutral-400 text-base md:text-lg leading-relaxed mb-4">
               Vállalkozásunk 2022 szeptemberében egyéni vállalkozásként alakult, majd 2024 augusztusától Kft-ként is működik.
             </p>
-            <p className="text-neutral-600 text-base md:text-lg leading-relaxed mb-6">
+            <p className="text-neutral-400 text-base md:text-lg leading-relaxed mb-6">
               Több száz telepített készülékkel és elégedett ügyféllel büszkélkedhetünk.
             </p>
-            <p className="text-neutral-500 text-sm">
-              Nemzeti Klímavédelmi Hatóságnál ellenőrizhető F Gáz azonosító: <span className="font-semibold text-neutral-700">1000000073393</span>
+            <p className="text-neutral-400 text-base md:text-lg">
+              Nemzeti Klímavédelmi Hatóságnál ellenőrizhető F Gáz azonosító: <span className="font-bold text-neutral-900">1000000073393</span>
             </p>
           </div>
         </Reveal>
@@ -877,55 +877,94 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   const navItems = [
-    { href: "#rolunk", label: "RÓLUNK" },
-    { href: "#szolgaltatasok", label: "SZOLGÁLTATÁSOK" },
-    { href: "#karbantartas", label: "KARBANTARTÁS" },
-    { href: "#velemenyek", label: "VÉLEMÉNYEK" },
-    { href: "#kapcsolat", label: "KAPCSOLAT" },
+    { href: "#rolunk", label: "Rólunk" },
+    { href: "#szolgaltatasok", label: "Szolgáltatások" },
+    { href: "#karbantartas", label: "Karbantartás" },
+    { href: "#velemenyek", label: "Vélemények" },
+    { href: "#kapcsolat", label: "Kapcsolat" },
   ];
 
   return (
-    <footer className="section-black py-8 md:py-12 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        {/* Main Footer - Same structure as Header */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-0 mb-8">
-          {/* Logo */}
-          <a href="#" className="lg:-ml-2">
+    <footer className="section-black relative overflow-hidden">
+      {/* Decorative gradient */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-20">
+        {/* Top section - Large logo */}
+        <div className="text-center mb-12 md:mb-16">
+          <a href="#" className="inline-block mb-6">
             <img
               src="/logo-white.svg"
               alt="Klíma Plus"
-              className="h-4 w-auto"
+              className="h-6 md:h-8 w-auto mx-auto"
             />
           </a>
-
-          {/* Nav Links */}
-          <nav className="flex flex-wrap items-center justify-center gap-6 lg:gap-12">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-white/70 hover:text-white text-sm tracking-widest hover-underline transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          {/* CTA Button */}
-          <CTAButton href={phoneLink}>
-            {phoneNumber}
-          </CTAButton>
+          <p className="text-white/40 text-sm md:text-base max-w-md mx-auto">
+            Több száz telepített készülék és elégedett ügyfél. Professzionális klímaszolgáltatás Nyugat-Dunántúlon.
+          </p>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-white/10 pt-6">
+        {/* Middle section - Nav & Contact */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-12 md:mb-16">
+          {/* Navigation */}
+          <div className="text-center md:text-left">
+            <h4 className="text-white/30 text-xs uppercase tracking-[0.2em] mb-4">Navigáció</h4>
+            <nav className="flex flex-col gap-2">
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="text-white/60 hover:text-white text-sm transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          {/* Contact */}
+          <div className="text-center">
+            <h4 className="text-white/30 text-xs uppercase tracking-[0.2em] mb-4">Kapcsolat</h4>
+            <div className="flex flex-col gap-2">
+              <a href={phoneLink} className="text-white text-lg md:text-xl font-semibold hover:text-blue-400 transition-colors">
+                {phoneNumber}
+              </a>
+              <a href="mailto:klimaplushungary@gmail.com" className="text-white/60 hover:text-white text-sm transition-colors">
+                klimaplushungary@gmail.com
+              </a>
+              <p className="text-white/40 text-sm">Celldömölk, Vas vármegye</p>
+            </div>
+          </div>
+
+          {/* Social */}
+          <div className="text-center md:text-right">
+            <h4 className="text-white/30 text-xs uppercase tracking-[0.2em] mb-4">Közösségi média</h4>
+            <a
+              href="https://www.facebook.com/profile.php?id=100085385665566"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              <span className="text-sm">Facebook</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom divider */}
+        <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-white/30 text-sm">
+            <p className="text-white/30 text-xs md:text-sm">
               © {currentYear} Klíma Plus Cell Kft. Minden jog fenntartva.
             </p>
-            <div className="text-white/30 text-xs text-center md:text-right">
-              <p>Weboldal készítés: Király Ruben</p>
-              <a href="tel:+36308952632" className="hover:text-white/50 transition-colors">+36 30 895 2632</a>
+            <div className="flex items-center gap-6">
+              <span className="text-white/20 text-xs">F Gáz azonosító: 1000000073393</span>
+              <div className="text-white/30 text-xs">
+                <span>Készítette: </span>
+                <a href="tel:+36308952632" className="hover:text-white/50 transition-colors">Király Ruben</a>
+              </div>
             </div>
           </div>
         </div>
