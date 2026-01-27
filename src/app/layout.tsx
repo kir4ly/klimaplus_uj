@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
@@ -14,16 +14,17 @@ const bebasNeue = Bebas_Neue({
   weight: ["400"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "Klíma Plus | Légkondicionáló szerelés - Celldömölk",
   description: "Professzionális klímamegoldások Celldömölkön. Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.",
   keywords: ["klíma", "légkondicionáló", "klímaszerelés", "klíma telepítés", "klíma karbantartás", "Celldömölk", "Vas megye", "klíma tisztítás"],
   authors: [{ name: "Klíma Plus Cell Kft." }],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
   openGraph: {
     title: "Klíma Plus | Légkondicionáló szerelés - Celldömölk",
     description: "Professzionális klímamegoldások Celldömölkön. Teljeskörű klímaszolgáltatás Vas, Veszprém, Győr-Moson-Sopron és Zala megyében.",
@@ -39,7 +40,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu" className="scroll-smooth">
-      <body className={`${dmSans.variable} ${bebasNeue.variable} antialiased`}>
+      <body className={`${dmSans.variable} ${bebasNeue.variable} antialiased overflow-x-hidden`}>
         {children}
       </body>
     </html>

@@ -58,8 +58,10 @@ function Header() {
   }, []);
 
   const navItems = [
-    { href: "#szolgaltatasok", label: "SZOLGÁLTATÁSOK" },
     { href: "#rolunk", label: "RÓLUNK" },
+    { href: "#szolgaltatasok", label: "SZOLGÁLTATÁSOK" },
+    { href: "#karbantartas", label: "KARBANTARTÁS" },
+    { href: "#velemenyek", label: "VÉLEMÉNYEK" },
     { href: "#kapcsolat", label: "KAPCSOLAT" },
   ];
 
@@ -283,33 +285,33 @@ function Hero() {
 // ============================================
 function Gallery() {
   const images = [
-    "/hero-gallery/FB_IMG_1769003406743.jpg",
-    "/hero-gallery/FB_IMG_1769003436565.jpg",
-    "/hero-gallery/FB_IMG_1769003446276.jpg",
-    "/hero-gallery/FB_IMG_1769003490309.jpg",
-    "/hero-gallery/FB_IMG_1769003527053.jpg",
-    "/hero-gallery/FB_IMG_1769003563158.jpg",
-    "/hero-gallery/FB_IMG_1769337123974.jpg",
-    "/hero-gallery/FB_IMG_1769337165156.jpg",
-    "/hero-gallery/FB_IMG_1769338707900.jpg",
-    "/hero-gallery/FB_IMG_1769338841605.jpg",
-    "/hero-gallery/FB_IMG_1769338868092.jpg",
-    "/hero-gallery/FB_IMG_1769338884707.jpg",
-    "/hero-gallery/FB_IMG_1769338940174.jpg",
-    "/hero-gallery/IMG_20230901_123819.jpg",
-    "/hero-gallery/IMG_20230922_144348.jpg",
-    "/hero-gallery/IMG_20230927_131342.jpg",
-    "/hero-gallery/IMG_20240412_142224.jpg",
-    "/hero-gallery/IMG_20240412_142309.jpg",
-    "/hero-gallery/IMG_20240412_142448.jpg",
-    "/hero-gallery/IMG_20240624_132640.jpg",
-    "/hero-gallery/IMG_20240624_141653.jpg",
-    "/hero-gallery/IMG_20250618_191244.jpg",
-    "/hero-gallery/IMG_20250726_172854.jpg",
-    "/hero-gallery/IMG_20250731_093135.jpg",
-    "/hero-gallery/IMG_20251003_125313.jpg",
-    "/hero-gallery/IMG_20251211_094143.jpg",
-    "/hero-gallery/Messenger_creation_B88C9D5E-168B-4828-9F78-832886349FCD.jpeg",
+    { src: "/hero-gallery/FB_IMG_1769003406743.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769003436565.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769003446276.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769003490309.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769003527053.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769003563158.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769337123974.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769337165156.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769338707900.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769338841605.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769338868092.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769338884707.webp", position: "center" },
+    { src: "/hero-gallery/FB_IMG_1769338940174.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20230901_123819.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20230922_144348.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20230927_131342.webp", position: "right bottom" },
+    { src: "/hero-gallery/IMG_20240412_142224.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20240412_142309.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20240412_142448.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20240624_132640.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20240624_141653.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20250618_191244.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20250726_172854.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20250731_093135.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20251003_125313.webp", position: "center" },
+    { src: "/hero-gallery/IMG_20251211_094143.webp", position: "center" },
+    { src: "/hero-gallery/klima_szereles.webp", position: "right bottom" },
   ];
 
   // Duplicate images for seamless infinite scroll
@@ -407,17 +409,18 @@ function Gallery() {
         onMouseMove={handleMouseMove}
       >
         <div className="gallery-scroll-track">
-          {duplicatedImages.map((src, index) => (
+          {duplicatedImages.map((img, index) => (
             <div
               key={index}
               className="flex-shrink-0 w-72 h-72 md:w-80 md:h-80 lg:w-96 lg:h-96 overflow-hidden rounded-lg relative select-none"
             >
               <Image
-                src={src}
+                src={img.src}
                 alt={`Munkáink ${(index % images.length) + 1}`}
                 fill
                 sizes="(max-width: 768px) 288px, (max-width: 1024px) 320px, 384px"
-                className="object-cover object-center pointer-events-none"
+                className="object-cover pointer-events-none"
+                style={{ objectPosition: img.position }}
                 loading="lazy"
                 draggable={false}
               />
@@ -437,22 +440,22 @@ function Services() {
     {
       number: "01",
       title: "TELEPÍTÉS",
-      desc: "Klímaberendezések szakszerű beszerelése otthonába vagy irodájába, teljes körű ügyintézéssel. Helyszíni felmérés, szakszerű kivitelezés, garancia.",
+      desc: "Több éves tapasztalattal vállaljuk klímaberendezések szakszerű beszerelését otthonába, irodájába, nyaralójába. Tiszta, pormentes munkavégzés.",
     },
     {
       number: "02",
       title: "KARBANTARTÁS",
-      desc: "Rendszeres karbantartás a klíma élettartamának növelése és hatékony működése érdekében. Szűrőcsere, hűtőközegellenőrzés, teljesítmény optimalizálás.",
+      desc: "A telepített berendezések karbantartásáról is gondoskodunk a klíma élettartamának növelése és hatékony működése érdekében. Szűrőcsere, hűtőközeg ellenőrzés, teljesítmény optimalizálás. Utólagos csepptálca fűtés beszerelése a kültéri egységbe.",
     },
     {
       number: "03",
       title: "TISZTÍTÁS",
-      desc: "Professzionális klímatisztítás az egészséges levegő és optimális működés biztosítására. Beltéri egység, kültéri egység, fertőtlenítés.",
+      desc: "Professzionális klímatisztítás, az egészséges levegő és optimális működés érdekében. Beltéri és kültéri egység tisztítása, fertőtlenítése.",
     },
     {
       number: "04",
       title: "JAVÍTÁS",
-      desc: "Gyors és megbízható hibaelhárítás minden típusú klímaberendezéshez. Gyors kiszállás, minden márka, alkatrészgarancia.",
+      desc: "Vállaljuk a klímaberendezések garancia időn belüli és kívüli javítását is. Gyors kiszállás, hibaelhárítás, alkatrész garancia.",
     },
   ];
 
@@ -489,6 +492,98 @@ function Services() {
 }
 
 // ============================================
+// ABOUT US
+// ============================================
+function AboutUs() {
+  const features = [
+    {
+      title: "Minőségi munkavégzés",
+      desc: "Pontos, precíz munkavégzés minőségi anyagokkal és szerszámokkal, minden előírást betartva számlával, garanciával.",
+    },
+    {
+      title: "Klíma márkák",
+      desc: "Elsősorban Gree, Syen, Polar, Aux klímaberendezéseket forgalmazunk, de minden márkát be tudunk szerezni ha az ügyfél úgy kívánja.",
+    },
+    {
+      title: "Versenyképes árak",
+      desc: "Helyszíni felmérést követően pontos árajánlatot adunk. Nálunk nincsenek rejtett költségek, csakis versenyképes árak.",
+    },
+    {
+      title: "Személyre szabva",
+      desc: "Minden ügyfelünk esetében személyre szabott javaslatot teszünk. Minden esetben az Ön igényeinek legmegfelelőbb klímaberendezést fogjuk javasolni.",
+    },
+  ];
+
+  return (
+    <section id="rolunk" className="section-white py-20 relative">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative">
+        {/* 100% Elégedettség pecsét - csak desktop */}
+        <div className="hidden md:block absolute top-0 right-4 md:right-8 lg:right-0">
+          <Reveal delay={0.3}>
+            <div className="flex items-center gap-3">
+              <div className="relative w-20 h-20 md:w-24 md:h-24">
+                <svg viewBox="0 0 100 100" className="w-full h-full">
+                  {/* Kör */}
+                  <circle cx="50" cy="50" r="45" fill="white" stroke="#1a1a1a" strokeWidth="4" />
+                  {/* Zöld pipa */}
+                  <path
+                    d="M30 50 L45 65 L70 35"
+                    fill="none"
+                    stroke="#4ade80"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-3xl md:text-4xl font-bold text-neutral-900">100%</span>
+                <span className="text-xs md:text-sm uppercase tracking-wider text-neutral-600">Elégedettségi garancia</span>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        <Reveal>
+          <h2 className="text-display text-[clamp(2rem,6vw,4rem)] mb-6">
+            RÓLUNK
+          </h2>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <div className="max-w-3xl mb-12">
+            <p className="text-neutral-600 text-base md:text-lg leading-relaxed mb-4">
+              Vállalkozásunk 2022 szeptemberében egyéni vállalkozásként alakult, majd 2024 augusztusától Kft-ként is működik.
+            </p>
+            <p className="text-neutral-600 text-base md:text-lg leading-relaxed mb-6">
+              Több száz telepített készülékkel és elégedett ügyféllel büszkélkedhetünk.
+            </p>
+            <p className="text-neutral-500 text-sm">
+              Nemzeti Klímavédelmi Hatóságnál ellenőrizhető F Gáz azonosító: <span className="font-semibold text-neutral-700">1000000073393</span>
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {features.map((feature, index) => (
+            <Reveal key={index} delay={0.2 + index * 0.1}>
+              <div className="border border-neutral-200 p-6 rounded-lg hover:border-neutral-400 transition-colors">
+                <h3 className="text-display text-lg md:text-xl mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-neutral-500 text-sm">
+                  {feature.desc}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================
 // MAINTENANCE GALLERY
 // ============================================
 function MaintenanceGallery() {
@@ -505,7 +600,7 @@ function MaintenanceGallery() {
   ];
 
   return (
-    <section id="rolunk" className="section-black py-20 relative noise">
+    <section id="karbantartas" className="section-black py-20 relative noise">
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
         <Reveal>
           <h2 className="text-display text-[clamp(2rem,6vw,4rem)] text-white mb-4">
@@ -576,6 +671,94 @@ function ServiceArea() {
 }
 
 // ============================================
+// REVIEWS
+// ============================================
+function Reviews() {
+  const reviews = [
+    {
+      name: "Marianna Kunyikné Járó",
+      initial: "M",
+      color: "bg-[#a08060]",
+      text: "Szakszerű tanácsadást kaptunk a felméréssel együtt. A beszerelést pontosan a megbeszélt időben, gyorsan, precízen végezték. Tisztaságot hagytak maguk után. Igényesek, közvetlenek, ezek alapján szívesen ajánlom őket!",
+    },
+    {
+      name: "Alíz Szabó",
+      initial: "A",
+      color: "bg-[#5c6bc0]",
+      text: "Szívesen ajánlom a vállalkozást mindenkinek! A felmérés, árajánlat és a leegyeztetett időpontban a kivitelezés a megbeszéltek alapján alakult. Az igényeink, kéréseink figyelembe lettek véve, amit köszönünk!",
+    },
+    {
+      name: "Gábor Pócza",
+      initial: "G",
+      color: "bg-[#fb8c00]",
+      text: "Szakszerű, gyors beszerelés, precíz munkavégzés! Munkájukra igényes, udvarias megbízható szakemberek! Megbeszélt időpontra pontos érkezés! Kitűnő munkát végeztek, mindenkinek tudom ajánlani Őket!",
+    },
+  ];
+
+  return (
+    <section id="velemenyek" className="section-white py-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+        <Reveal>
+          <h2 className="text-display text-[clamp(2rem,6vw,4rem)] mb-4">
+            VÉLEMÉNYEK
+          </h2>
+          <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-8 md:mb-12">
+            <span className="text-xl md:text-2xl font-bold text-neutral-900">5/5</span>
+            <div className="flex text-yellow-500 text-xl md:text-2xl">
+              {"★★★★★".split("").map((star, i) => (
+                <span key={i}>{star}</span>
+              ))}
+            </div>
+            <span className="text-neutral-500 text-sm md:text-base">Ügyfeleink visszajelzései</span>
+          </div>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12">
+          {reviews.map((review, index) => (
+            <Reveal key={index} delay={index * 0.1}>
+              <div className="bg-neutral-100 p-4 md:p-6 rounded-lg h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-3 md:mb-4">
+                  <div className={`w-9 h-9 md:w-10 md:h-10 rounded-full ${review.color} flex items-center justify-center text-white font-semibold text-sm md:text-base`}>
+                    {review.initial}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-neutral-900 text-sm md:text-base">{review.name}</p>
+                    <div className="flex text-yellow-500 text-sm">
+                      {"★★★★★".split("").map((star, i) => (
+                        <span key={i}>{star}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-neutral-600 text-sm leading-relaxed flex-1">
+                  {review.text}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.4}>
+          <div className="text-center">
+            <a
+              href="https://share.google/6Q2SLIsHE1DMuUxCp"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-neutral-300 px-4 md:px-6 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-medium hover:bg-neutral-100 transition-colors"
+            >
+              ÖSSZES VÉLEMÉNY
+              <svg className="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+// ============================================
 // PROCESS
 // ============================================
 function Process() {
@@ -637,10 +820,10 @@ function Process() {
 // ============================================
 function Contact() {
   return (
-    <section id="kapcsolat" className="section-white py-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+    <section id="kapcsolat" className="section-white py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
         <Reveal>
-          <p className="text-neutral-400 text-sm tracking-[0.3em] uppercase mb-6">
+          <p className="text-neutral-400 text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase mb-4 md:mb-6">
             Kapcsolat
           </p>
         </Reveal>
@@ -648,23 +831,31 @@ function Contact() {
         <Reveal delay={0.1}>
           <a
             href={phoneLink}
-            className="text-display text-[clamp(1.5rem,8vw,5rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-4"
+            className="text-display text-[clamp(1.3rem,7vw,5rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-3 md:mb-4"
           >
             {phoneNumber}
           </a>
         </Reveal>
 
         <Reveal delay={0.15}>
-          <a
-            href="mailto:klimaplushungary@gmail.com"
-            className="text-neutral-500 hover:text-neutral-900 text-lg md:text-xl transition-colors inline-block mb-8"
-          >
-            klimaplushungary@gmail.com
-          </a>
+          <div className="flex flex-col items-center justify-center gap-1 md:gap-6 mb-6 md:mb-8">
+            <a
+              href="mailto:klimaplushungary@gmail.com"
+              className="text-neutral-500 hover:text-neutral-900 text-sm md:text-xl transition-colors"
+            >
+              klimaplushungary@gmail.com
+            </a>
+            <a
+              href="mailto:klimapluscell@gmail.com"
+              className="text-neutral-500 hover:text-neutral-900 text-sm md:text-xl transition-colors"
+            >
+              klimapluscell@gmail.com
+            </a>
+          </div>
         </Reveal>
 
         <Reveal delay={0.2}>
-          <p className="text-neutral-500 text-base mb-8">
+          <p className="text-neutral-500 text-sm md:text-base mb-6 md:mb-8">
             Celldömölk, Vas vármegye
           </p>
         </Reveal>
@@ -729,7 +920,19 @@ function Footer() {
                 <Phone className="w-4 h-4" />
                 {phoneNumber}
               </a>
-              <p className="text-white/50 text-sm">
+              <a
+                href="mailto:klimaplushungary@gmail.com"
+                className="text-white/50 hover:text-white text-sm transition-colors"
+              >
+                klimaplushungary@gmail.com
+              </a>
+              <a
+                href="mailto:klimapluscell@gmail.com"
+                className="text-white/50 hover:text-white text-sm transition-colors"
+              >
+                klimapluscell@gmail.com
+              </a>
+              <p className="text-white/50 text-sm mt-2">
                 Celldömölk, Vas vármegye
               </p>
               <p className="text-white/50 text-sm">
@@ -745,9 +948,10 @@ function Footer() {
             <p className="text-white/30 text-sm">
               © {currentYear} Klíma Plus Cell Kft. Minden jog fenntartva.
             </p>
-            <p className="text-white/30 text-xs">
-              Weboldal készítés: Király Benedek
-            </p>
+            <div className="text-white/30 text-xs text-center md:text-right">
+              <p>Weboldal készítés: Király Ruben</p>
+              <a href="tel:+36308952632" className="hover:text-white/50 transition-colors">+36 30 895 2632</a>
+            </div>
           </div>
         </div>
       </div>
@@ -764,8 +968,10 @@ export default function Home() {
       <Header />
       <Hero />
       <Gallery />
+      <AboutUs />
       <Services />
       <MaintenanceGallery />
+      <Reviews />
       <ServiceArea />
       <Process />
       <Contact />
