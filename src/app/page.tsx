@@ -932,6 +932,9 @@ function Footer() {
               <a href="mailto:klimaplushungary@gmail.com" className="text-white/60 hover:text-white text-sm transition-colors">
                 klimaplushungary@gmail.com
               </a>
+              <a href="mailto:klimapluscell@gmail.com" className="text-white/60 hover:text-white text-sm transition-colors">
+                klimapluscell@gmail.com
+              </a>
               <p className="text-white/40 text-sm">Celldömölk, Vas vármegye</p>
             </div>
           </div>
