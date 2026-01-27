@@ -821,50 +821,65 @@ function Process() {
 function Contact() {
   return (
     <section id="kapcsolat" className="section-white py-12 md:py-20">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
         <Reveal>
-          <p className="text-neutral-400 text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase mb-4 md:mb-6">
+          <p className="text-neutral-400 text-xs md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase mb-8 md:mb-12 text-center">
             Kapcsolat
           </p>
         </Reveal>
 
-        <Reveal delay={0.1}>
-          <a
-            href={phoneLink}
-            className="text-display text-[clamp(1.3rem,7vw,5rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-3 md:mb-4"
-          >
-            {phoneNumber}
-          </a>
-        </Reveal>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left side - Contact info */}
+          <Reveal delay={0.1}>
+            <div className="text-center flex flex-col items-center lg:items-center lg:pr-12">
+              <a
+                href={phoneLink}
+                className="text-display text-[clamp(1.8rem,6vw,4rem)] leading-none hover:text-neutral-500 transition-colors inline-block mb-4 md:mb-6"
+              >
+                {phoneNumber}
+              </a>
 
-        <Reveal delay={0.15}>
-          <div className="flex flex-col items-center justify-center gap-1 md:gap-6 mb-6 md:mb-8">
-            <a
-              href="mailto:klimaplushungary@gmail.com"
-              className="text-neutral-500 hover:text-neutral-900 text-sm md:text-xl transition-colors"
-            >
-              klimaplushungary@gmail.com
-            </a>
-            <a
-              href="mailto:klimapluscell@gmail.com"
-              className="text-neutral-500 hover:text-neutral-900 text-sm md:text-xl transition-colors"
-            >
-              klimapluscell@gmail.com
-            </a>
-          </div>
-        </Reveal>
+              <div className="flex flex-col items-center gap-2 mb-6">
+                <a
+                  href="mailto:klimaplushungary@gmail.com"
+                  className="text-neutral-500 hover:text-neutral-900 text-sm md:text-lg transition-colors"
+                >
+                  klimaplushungary@gmail.com
+                </a>
+                <a
+                  href="mailto:klimapluscell@gmail.com"
+                  className="text-neutral-500 hover:text-neutral-900 text-sm md:text-lg transition-colors"
+                >
+                  klimapluscell@gmail.com
+                </a>
+              </div>
 
-        <Reveal delay={0.2}>
-          <p className="text-neutral-500 text-sm md:text-base mb-6 md:mb-8">
-            Celldömölk, Vas vármegye
-          </p>
-        </Reveal>
+              <p className="text-neutral-500 text-sm md:text-base mb-6 md:mb-8">
+                Celldömölk, Vas vármegye
+              </p>
 
-        <Reveal delay={0.3}>
-          <CTAButton href={phoneLink}>
-            INGYENES KONZULTÁCIÓ
-          </CTAButton>
-        </Reveal>
+              <CTAButton href={phoneLink}>
+                INGYENES KONZULTÁCIÓ
+              </CTAButton>
+            </div>
+          </Reveal>
+
+          {/* Right side - Google Maps */}
+          <Reveal delay={0.2}>
+            <div className="w-full h-[300px] md:h-[400px] rounded-xl overflow-hidden shadow-lg">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2719.5!2d17.1436291!3d47.2558924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2b3a6da7a0a459b7%3A0xb66c4fb40d394472!2sKl%C3%ADma%20Plus!5e0!3m2!1shu!2shu!4v1706000000000!5m2!1shu!2shu"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Klíma Plus helyszín"
+              />
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
