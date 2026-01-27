@@ -741,7 +741,7 @@ function Reviews() {
         <Reveal delay={0.4}>
           <div className="text-center">
             <a
-              href="https://share.google/6Q2SLIsHE1DMuUxCp"
+              href="https://www.google.com/maps/place/Klíma+Plus/@47.2558924,17.1436291,17z/data=!3m1!4b1!4m12!1m5!8m4!1e1!2s104535717481138910716!3m1!1e1!3m5!1s0x2b3a6da7a0a459b7:0xb66c4fb40d394472!8m2!3d47.2558888!4d17.146204!16s%2Fg%2F11twzdstdx?hl=hu&entry=ttu"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-neutral-300 px-4 md:px-6 py-2.5 md:py-3 rounded-full text-xs md:text-sm font-medium hover:bg-neutral-100 transition-colors"
@@ -876,74 +876,49 @@ function Contact() {
 function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const navItems = [
+    { href: "#rolunk", label: "RÓLUNK" },
+    { href: "#szolgaltatasok", label: "SZOLGÁLTATÁSOK" },
+    { href: "#karbantartas", label: "KARBANTARTÁS" },
+    { href: "#velemenyek", label: "VÉLEMÉNYEK" },
+    { href: "#kapcsolat", label: "KAPCSOLAT" },
+  ];
+
   return (
-    <footer className="section-black py-12 md:py-16 border-t border-white/10">
+    <footer className="section-black py-8 md:py-12 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-        {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-8 md:mb-12">
-          {/* Logo & Description */}
-          <div>
+        {/* Main Footer - Same structure as Header */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-0 mb-8">
+          {/* Logo */}
+          <a href="#" className="lg:-ml-2">
             <img
               src="/logo-white.svg"
               alt="Klíma Plus"
-              className="h-6 w-auto mb-4"
+              className="h-4 w-auto"
             />
-            <p className="text-white/50 text-sm leading-relaxed">
-              Professzionális klímaszolgáltatás Nyugat-Dunántúlon. Telepítés, karbantartás, tisztítás és javítás.
-            </p>
-          </div>
+          </a>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-white font-semibold mb-4 text-sm tracking-wider">NAVIGÁCIÓ</h4>
-            <nav className="flex flex-col gap-2">
-              <a href="#szolgaltatasok" className="text-white/50 hover:text-white text-sm transition-colors">
-                Szolgáltatások
+          {/* Nav Links */}
+          <nav className="flex flex-wrap items-center justify-center gap-6 lg:gap-12">
+            {navItems.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="text-white/70 hover:text-white text-sm tracking-widest hover-underline transition-colors"
+              >
+                {item.label}
               </a>
-              <a href="#rolunk" className="text-white/50 hover:text-white text-sm transition-colors">
-                Rólunk
-              </a>
-              <a href="#kapcsolat" className="text-white/50 hover:text-white text-sm transition-colors">
-                Kapcsolat
-              </a>
-            </nav>
-          </div>
+            ))}
+          </nav>
 
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-white font-semibold mb-4 text-sm tracking-wider">KAPCSOLAT</h4>
-            <div className="flex flex-col gap-2">
-              <a
-                href={phoneLink}
-                className="text-white/50 hover:text-white text-sm transition-colors flex items-center gap-2"
-              >
-                <Phone className="w-4 h-4" />
-                {phoneNumber}
-              </a>
-              <a
-                href="mailto:klimaplushungary@gmail.com"
-                className="text-white/50 hover:text-white text-sm transition-colors"
-              >
-                klimaplushungary@gmail.com
-              </a>
-              <a
-                href="mailto:klimapluscell@gmail.com"
-                className="text-white/50 hover:text-white text-sm transition-colors"
-              >
-                klimapluscell@gmail.com
-              </a>
-              <p className="text-white/50 text-sm mt-2">
-                Celldömölk, Vas vármegye
-              </p>
-              <p className="text-white/50 text-sm">
-                Vas, Veszprém, Győr-Moson-Sopron, Zala
-              </p>
-            </div>
-          </div>
+          {/* CTA Button */}
+          <CTAButton href={phoneLink}>
+            {phoneNumber}
+          </CTAButton>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-white/10 pt-8">
+        <div className="border-t border-white/10 pt-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-white/30 text-sm">
               © {currentYear} Klíma Plus Cell Kft. Minden jog fenntartva.
