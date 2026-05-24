@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import CookieConsent from "@/components/cookie-consent";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="hu" className="scroll-smooth">
       <body className={`${dmSans.variable} ${bebasNeue.variable} antialiased overflow-x-hidden`}>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
