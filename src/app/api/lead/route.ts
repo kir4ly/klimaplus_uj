@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const FROM = process.env.LEAD_FROM_EMAIL || "Klima Plus <onboarding@resend.dev>";
+// Verified Resend sending domain (klimapluscell.hu). Hardcoded since it's
+// stable — the old LEAD_FROM_EMAIL env var on Vercel is now unused.
+const FROM = "Klima Plus <noreply@klimapluscell.hu>";
 const NOTIFY = (process.env.LEAD_NOTIFY_EMAILS || "")
   .split(",")
   .map((s) => s.trim())
@@ -20,46 +22,17 @@ function confirmationHtml(firstName: string) {
   const name = esc(firstName);
   return `<!doctype html>
 <html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f0f0f0;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f0f0f0;">Köszönjük a jelentkezését! 24 órán belül telefonon keressük.</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0f0f0;">
-    <tr><td align="center" style="padding:24px 12px;">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
-        <tr><td align="center" style="padding:6px 0 18px;">
-          <span style="font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:800;letter-spacing:2px;color:#1f9fd6;">KLIMA&nbsp;PLUS</span>
-        </td></tr>
-        <tr><td style="background:#ffffff;border-radius:16px;overflow:hidden;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            <tr><td style="background:#16a34a;font-size:6px;line-height:6px;height:6px;">&nbsp;</td></tr>
-            <tr><td align="center" style="padding:36px 36px 4px;font-family:Arial,Helvetica,sans-serif;">
-              <div style="font-size:46px;line-height:1;">✅</div>
-              <h1 style="font-size:24px;color:#16a34a;margin:14px 0 0;">Sikeres jelentkezés!</h1>
-            </td></tr>
-            <tr><td style="padding:18px 36px 0;font-family:Arial,Helvetica,sans-serif;color:#222;font-size:16px;line-height:1.6;">
-              <p style="margin:0 0 16px;font-weight:bold;">Kedves ${name}!</p>
-              <p style="margin:0 0 16px;">Köszönjük a jelentkezését a klíma telepítés kapcsán! Megkaptuk az adatait, és kollégánk hamarosan keresi Önt.</p>
-              <p style="margin:0;"><strong>24 órán belül telefonon felvesszük Önnel a kapcsolatot</strong>, hogy egyeztessük a részleteket.</p>
-            </td></tr>
-            <tr><td style="padding:22px 36px 0;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;">
-                <tr><td align="center" style="padding:16px 20px;font-family:Arial,Helvetica,sans-serif;">
-                  <div style="font-size:13px;color:#9a3412;margin-bottom:4px;">Nem szeretne várni? Hívjon most:</div>
-                  <a href="tel:${PHONE_TEL}" style="font-size:22px;font-weight:bold;color:#ED8B3A;text-decoration:none;">${PHONE_DISPLAY}</a>
-                </td></tr>
-              </table>
-            </td></tr>
-            <tr><td style="padding:24px 36px 34px;font-family:Arial,Helvetica,sans-serif;color:#222;font-size:16px;line-height:1.6;">
-              <p style="margin:0;">Üdvözlettel,<br><strong>Takács Tamás</strong><br><span style="color:#666;">Klima Plus Cell Kft.</span></p>
-            </td></tr>
-          </table>
-        </td></tr>
-        <tr><td style="padding:18px 24px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#888;line-height:1.6;">
-          Klima Plus Cell Kft. · Koptik Odó utca 20., 9500 Celldömölk · Adószám: 32621880-2-18<br>
-          Ezt a visszaigazolást a klímatelepítési jelentkezése miatt küldtük.
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
+<body style="margin:0;background:#ffffff;">
+<div style="max-width:560px;margin:0 auto;padding:28px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#222222;">
+  <p style="margin:0 0 22px;font-size:22px;font-weight:bold;letter-spacing:1px;color:#1f9fd6;">KLIMA PLUS</p>
+  <h1 style="margin:0 0 16px;font-size:20px;color:#16a34a;">Sikeres jelentkezés</h1>
+  <p style="margin:0 0 14px;">Kedves ${name}!</p>
+  <p style="margin:0 0 14px;">Köszönjük a jelentkezését a klíma telepítés kapcsán. Megkaptuk az adatait.</p>
+  <p style="margin:0 0 14px;"><strong>24 órán belül telefonon felvesszük Önnel a kapcsolatot.</strong></p>
+  <p style="margin:0 0 22px;">Ha nem szeretne várni, hívjon minket: <a href="tel:${PHONE_TEL}" style="color:#1f9fd6;text-decoration:none;">${PHONE_DISPLAY}</a></p>
+  <p style="margin:0 0 24px;">Üdvözlettel,<br>Takács Tamás &middot; Klima Plus Cell Kft.</p>
+  <p style="margin:0;border-top:1px solid #eeeeee;padding-top:14px;font-size:12px;color:#999999;">Klima Plus Cell Kft. &middot; Koptik Odó utca 20., 9500 Celldömölk &middot; Adószám: 32621880-2-18</p>
+</div>
 </body></html>`;
 }
 
@@ -84,54 +57,35 @@ function notifyHtml(d: Lead) {
   const fullName = `${d.lastName ?? ""} ${d.firstName ?? ""}`.trim() || "—";
   const telHref = (d.phone ?? "").replace(/[^\d+]/g, "");
   const when = new Date().toLocaleString("hu-HU", { timeZone: "Europe/Budapest" });
-  const row = (k: string, v: string) =>
-    `<tr>
-      <td style="padding:10px 14px;border-bottom:1px solid #eee;color:#666;font-size:13px;white-space:nowrap;vertical-align:top;">${k}</td>
-      <td style="padding:10px 14px;border-bottom:1px solid #eee;color:#111;font-size:15px;font-weight:600;">${v}</td>
-    </tr>`;
   return `<!doctype html>
 <html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f0f0f0;">
-  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#f0f0f0;">Új lead: ${esc(fullName)} – ${esc(d.phone)}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f0f0f0;">
-    <tr><td align="center" style="padding:24px 12px;">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
-        <tr><td style="background:#dc2626;border-radius:14px 14px 0 0;padding:20px 28px;text-align:center;font-family:Arial,Helvetica,sans-serif;">
-          <span style="font-size:22px;font-weight:800;color:#ffffff;">🔥 Új lead érkezett!</span>
-        </td></tr>
-        <tr><td style="background:#ffffff;border-radius:0 0 14px 14px;padding:26px 28px;font-family:Arial,Helvetica,sans-serif;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:0 0 22px;">
-            <a href="tel:${telHref}" style="display:inline-block;background:#16a34a;color:#ffffff;font-size:18px;font-weight:bold;text-decoration:none;padding:14px 30px;border-radius:10px;">📞 Hívd fel MOST: ${esc(d.phone)}</a>
-            <div style="font-size:13px;color:#dc2626;font-weight:bold;padding-top:10px;">⚡ A gyors hívás = a telepítés. Lehetőleg 5 percen belül!</div>
-          </td></tr></table>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eee;border-radius:10px;overflow:hidden;">
-            ${row("Név", esc(fullName))}
-            ${row("Telefon", `<a href="tel:${telHref}" style="color:#2563eb;text-decoration:none;">${esc(d.phone)}</a>`)}
-            ${row("E-mail", `<a href="mailto:${esc(d.email)}" style="color:#2563eb;text-decoration:none;">${esc(d.email)}</a>`)}
-            ${row("Háztípus", esc(d.houseType) || "—")}
-            ${row("Irányítószám", esc(d.zip) || "—")}
-            ${row("Marketing hozzájárulás", d.marketingConsent ? "✅ IGEN" : "— nem")}
-            ${row("Beérkezett", esc(when))}
-          </table>
-        </td></tr>
-      </table>
-    </td></tr>
-  </table>
+<body style="margin:0;background:#ffffff;">
+<div style="max-width:560px;margin:0 auto;padding:28px 24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#222222;">
+  <h1 style="margin:0 0 14px;font-size:19px;">Új jelentkezés – Klima Plus</h1>
+  <p style="margin:0 0 18px;font-size:17px;"><strong>Hívd fel mielőbb:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>
+  <p style="margin:0;">
+    <strong>Név:</strong> ${esc(fullName)}<br>
+    <strong>E-mail:</strong> <a href="mailto:${esc(d.email)}" style="color:#1f9fd6;text-decoration:none;">${esc(d.email)}</a><br>
+    <strong>Háztípus:</strong> ${esc(d.houseType) || "—"}<br>
+    <strong>Irányítószám:</strong> ${esc(d.zip) || "—"}<br>
+    <strong>Marketing hozzájárulás:</strong> ${d.marketingConsent ? "igen" : "nem"}<br>
+    <strong>Beérkezett:</strong> ${esc(when)}
+  </p>
+</div>
 </body></html>`;
 }
 
 function notifyText(d: Lead) {
   const fullName = `${d.lastName ?? ""} ${d.firstName ?? ""}`.trim() || "—";
-  return `🔥 ÚJ LEAD – Klima Plus
+  return `Új jelentkezés – Klima Plus
+
+Hívd fel mielőbb: ${d.phone ?? "—"}
 
 Név: ${fullName}
-Telefon: ${d.phone ?? "—"}
 E-mail: ${d.email ?? "—"}
 Háztípus: ${d.houseType ?? "—"}
 Irányítószám: ${d.zip ?? "—"}
-Marketing hozzájárulás: ${d.marketingConsent ? "IGEN" : "nem"}
-
-⚡ Hívd fel minél hamarabb (lehetőleg 5 percen belül)!`;
+Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}`;
 }
 
 export async function POST(req: Request) {
@@ -164,7 +118,7 @@ export async function POST(req: Request) {
         from: FROM,
         to: NOTIFY,
         replyTo: d.email,
-        subject: `Új lead: ${d.firstName} ${d.lastName ?? ""} – ${d.phone}`,
+        subject: `Új jelentkezés: ${d.firstName} ${d.lastName ?? ""} – ${d.phone}`,
         html: notifyHtml(d),
         text: notifyText(d),
       });
@@ -178,7 +132,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: FROM,
       to: d.email,
-      subject: "Sikeres jelentkezés! :)",
+      subject: "Sikeres jelentkezés – Klima Plus",
       html: confirmationHtml(d.firstName),
       text: confirmationText(d.firstName),
     });
