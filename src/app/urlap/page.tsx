@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Script from "next/script";
+import Image from "next/image";
+import ExitIntentPopup from "@/components/exit-intent-popup";
+import { Phone, User, FileText } from "lucide-react";
 
 const PIXEL_ID = "1452932669308796";
 const HOUSE_TYPES = ["Családi", "Társas", "Egyéb"];
@@ -36,6 +39,19 @@ export default function UrlapPage() {
     };
     window.addEventListener("cookie-consent-changed", onChange);
     return () => window.removeEventListener("cookie-consent-changed", onChange);
+  }, []);
+
+  // Dark page root so elastic overscroll past the photo doesn't flash white.
+  useEffect(() => {
+    const html = document.documentElement;
+    const prevHtml = html.style.backgroundColor;
+    const prevBody = document.body.style.backgroundColor;
+    html.style.backgroundColor = "#2b2b2b";
+    document.body.style.backgroundColor = "#2b2b2b";
+    return () => {
+      html.style.backgroundColor = prevHtml;
+      document.body.style.backgroundColor = prevBody;
+    };
   }, []);
 
   const validateStep = (): string => {
@@ -80,7 +96,7 @@ export default function UrlapPage() {
     "mt-2 w-full rounded-lg border border-neutral-300 px-4 py-3 text-neutral-900 shadow-sm focus:border-[#2563eb] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30";
 
   return (
-    <main className="flex min-h-screen flex-col bg-neutral-100 font-body">
+    <main className="relative isolate flex min-h-screen flex-col font-body">
       <Script id="meta-pixel" strategy="afterInteractive">{`
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
         var c=null;try{c=localStorage.getItem('klima-cookie-consent')}catch(e){}
@@ -92,27 +108,38 @@ export default function UrlapPage() {
         <img height="1" width="1" style={{ display: "none" }} alt="" src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`} />
       </noscript>
 
+      {/* Optimized background photo (Next serves WebP/AVIF, sized + priority-loaded) */}
+      <Image
+        src="/urlap-bg.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-20 object-cover object-center"
+      />
+      <div className="absolute inset-0 -z-10 bg-black/45" aria-hidden />
+
       <ContactBar className="hidden md:flex" />
 
       <div className="flex flex-1 items-center justify-center px-4 py-6 md:py-10">
-        <div className="w-full max-w-xl rounded-3xl bg-[#3c3c3c] px-6 py-9 shadow-xl md:px-12 md:py-12">
+        <div className="w-full max-w-2xl rounded-3xl bg-[#3c3c3c] px-7 py-10 shadow-xl md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto h-8 w-auto md:h-10" />
+          <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
-          <h1 className="mt-7 text-center text-xl font-semibold leading-snug text-[#ED8B3A] md:text-2xl">
+          <h1 className="mt-8 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-10 md:text-3xl">
             Ne a hőség döntse el,<br />hogyan alszik a családod nyáron.
           </h1>
 
-          <ul className="mt-6 space-y-1.5 text-center text-base text-white md:text-lg">
+          <ul className="mt-7 space-y-3 text-center text-lg text-white md:mt-8 md:text-xl">
             <li>✅ Rejtett költségek nélkül</li>
             <li>✅ Nem kell utánunk takarítani</li>
             <li>✅ Akár 10 év garancia</li>
           </ul>
 
-          <p className="mt-6 text-center font-semibold text-[#ED8B3A]">❗ Foglaljon időpontot a nyári hőség előtt ❗</p>
-          <p className="mt-3 text-center text-sm text-white/90">(kitöltési idő kb. 1 perc)</p>
+          <p className="mt-7 text-center text-lg font-semibold text-[#ED8B3A] md:mt-8 md:text-xl">❗ Foglaljon időpontot a nyári hőség előtt ❗</p>
+          <p className="mt-4 text-center text-base text-white/90">(kitöltési idő kb. 1 perc)</p>
 
-          <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-lg">
+          <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-lg md:mt-10">
             {done ? (
               <div className="px-6 py-10 text-center">
                 <h2 className="text-2xl font-bold text-green-600">
@@ -128,10 +155,10 @@ export default function UrlapPage() {
                 <div className="min-h-[210px] px-6 py-7">
                   {step === 0 && (
                     <fieldset>
-                      <legend className="mb-4 font-bold text-neutral-900">Milyen típusú házról van szó?</legend>
+                      <legend className="mb-4 text-lg font-bold text-neutral-900">Milyen típusú házról van szó?</legend>
                       <div className="space-y-3">
                         {HOUSE_TYPES.map((t) => (
-                          <label key={t} className="flex cursor-pointer items-center gap-3 font-semibold text-neutral-900">
+                          <label key={t} className="flex cursor-pointer items-center gap-3 text-lg font-semibold text-neutral-900">
                             <input type="radio" name="houseType" checked={data.houseType === t} onChange={() => update("houseType", t)} className="h-5 w-5 accent-[#2563eb]" />
                             {t}
                           </label>
@@ -211,6 +238,7 @@ export default function UrlapPage() {
       </div>
 
       <ContactBar className="flex md:hidden" />
+      <ExitIntentPopup />
     </main>
   );
 }
@@ -218,9 +246,9 @@ export default function UrlapPage() {
 function ContactBar({ className = "" }: { className?: string }) {
   return (
     <div className={`${className} w-full flex-col items-center justify-center gap-3 bg-[#2b2b2b] px-4 py-3 text-center text-sm font-medium text-white md:flex-row md:gap-12 md:text-base`}>
-      <a href="tel:+36702566448" className="flex items-center gap-2">📞 +36 70 256 6448</a>
-      <span className="flex items-center gap-2">👤 Klima Plus Cell Kft.</span>
-      <span className="flex items-center gap-2">📄 Adószám: 32621880-2-18</span>
+      <a href="tel:+36702566448" className="flex items-center gap-2"><Phone className="h-[1.15em] w-[1.15em] shrink-0" strokeWidth={2.5} /> +36 70 256 6448</a>
+      <span className="flex items-center gap-2"><User className="h-[1.15em] w-[1.15em] shrink-0" strokeWidth={2.5} /> Klima Plus Cell Kft.</span>
+      <span className="flex items-center gap-2"><FileText className="h-[1.15em] w-[1.15em] shrink-0" strokeWidth={2.5} /> Adószám: 32621880-2-18</span>
     </div>
   );
 }
