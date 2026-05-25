@@ -128,15 +128,25 @@ export default function UrlapPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
-          <h1 className="mt-6 text-center text-xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-2xl">
+          <h1 className="mt-6 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-3xl">
             Töltse ki a kérdőívünket 2 perc alatt, hogy tanácsot adhassunk!
           </h1>
 
-          <ul className="mt-6 space-y-2 text-center text-lg text-white md:mt-7 md:text-xl">
+          <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
+
+          <ul className="space-y-3 text-center text-xl text-white md:text-2xl">
             <li>✅ Rejtett költségek nélkül</li>
             <li>✅ Nem kell utánunk takarítani</li>
             <li>✅ Akár 10 év garancia</li>
           </ul>
+
+          <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
+
+          <p className="text-center text-lg leading-relaxed text-white/90 md:text-xl">
+            <span className="font-black text-red-500">FIGYELEM!</span><br />
+            A nyár közeledtével gyorsan fogynak szabad időpontjaink.<br />
+            Ha ezt látja, még van szabad hely.
+          </p>
 
           <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-lg md:mt-10">
             {done ? (

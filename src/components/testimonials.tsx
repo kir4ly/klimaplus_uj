@@ -21,15 +21,15 @@ const REVIEWS = [
 
 export default function Testimonials() {
   return (
-    <div className="mt-3 space-y-3">
+    <div className="mt-4 space-y-4">
       {REVIEWS.map((r) => (
-        <figure key={r.name} className="rounded-xl bg-white px-5 py-4 text-left shadow">
+        <figure key={r.name} className="rounded-xl bg-white px-6 py-5 text-left shadow">
           <div className="flex items-center justify-between gap-3">
-            <figcaption className="text-sm font-semibold text-neutral-900">{r.name}</figcaption>
-            <span className="shrink-0 text-xs text-neutral-500">Google · {r.time}</span>
+            <figcaption className="text-base font-semibold text-neutral-900 md:text-lg">{r.name}</figcaption>
+            <span className="shrink-0 text-sm text-neutral-500">Google · {r.time}</span>
           </div>
-          <div className="mt-1 text-sm leading-none text-[#FBBC05]" aria-hidden="true">★★★★★</div>
-          <blockquote className="mt-2 text-sm leading-relaxed text-neutral-700">{r.text}</blockquote>
+          <div className="mt-1.5 text-base leading-none text-[#FBBC05]" aria-hidden="true">★★★★★</div>
+          <blockquote className="mt-2.5 text-base leading-relaxed text-neutral-700 md:text-lg">{r.text}</blockquote>
         </figure>
       ))}
     </div>
