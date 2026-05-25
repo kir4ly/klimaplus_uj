@@ -147,7 +147,7 @@ export default function UrlapPage() {
       <ContactBar className="hidden md:flex" />
 
       <div className="flex flex-1 items-stretch justify-center px-0 py-0 md:items-center md:px-4 md:py-10">
-        <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/60 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:px-14 md:py-14">
+        <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/50 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:bg-[#3c3c3c]/85 md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
@@ -157,7 +157,9 @@ export default function UrlapPage() {
 
           <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
 
-          <ul className="space-y-3 text-center text-2xl text-white md:text-3xl">
+          <h2 className="text-center text-2xl font-bold text-white md:text-3xl">Klímaszerelés</h2>
+
+          <ul className="mt-4 space-y-3 text-center text-2xl text-white md:text-3xl">
             <li>✅ Rejtett költségek nélkül</li>
             <li>✅ Nem kell utánunk takarítani</li>
             <li>✅ Akár 10 év garancia</li>
