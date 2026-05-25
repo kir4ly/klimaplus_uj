@@ -120,6 +120,9 @@ export default function UrlapPage() {
   // Free on-site assessment eligibility based on the entered zip (≈10 km of Celldömölk)
   const eligible = ELIGIBLE_ZIPS.has(data.zip.trim());
 
+  // Are the current step's required fields filled? → TOVÁBB gomb zöld
+  const stepReady = validateStep() === "";
+
   return (
     <main className="relative isolate flex min-h-screen flex-col font-body">
       <Script id="meta-pixel" strategy="afterInteractive">{`
@@ -133,14 +136,24 @@ export default function UrlapPage() {
         <img height="1" width="1" style={{ display: "none" }} alt="" src={`https://www.facebook.com/tr?id=${PIXEL_ID}&ev=PageView&noscript=1`} />
       </noscript>
 
-      {/* Optimized background photo (Next serves WebP/AVIF, sized + priority-loaded) */}
+      {/* MOBILE bg: heavily compressed install photo (hidden behind the blurred
+          panel anyway). No priority on the desktop image below, so on mobile only
+          this tiny image loads → fast LCP. */}
       <Image
-        src="/urlap-bg.jpg"
+        src="/urlap-bg-mobile.jpg"
         alt=""
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover object-center"
+        className="-z-20 object-cover object-center md:hidden"
+      />
+      {/* DESKTOP bg: unchanged original (keeps the 100/100 desktop score) */}
+      <Image
+        src="/urlap-bg.jpg"
+        alt=""
+        fill
+        sizes="100vw"
+        className="-z-20 hidden object-cover object-center md:block"
       />
       <div className="absolute inset-0 -z-10 bg-black/45" aria-hidden />
 
@@ -273,7 +286,7 @@ export default function UrlapPage() {
                     </button>
                   )}
                   <div className="flex flex-1 items-center justify-center text-sm text-white/80">{step + 1} / 4</div>
-                  <button onClick={next} disabled={submitting} className={`flex items-center gap-2 px-6 py-4 font-semibold transition disabled:opacity-70 ${step === 3 ? "bg-green-500 hover:bg-green-600" : "bg-[#1e50c7] hover:bg-[#1a47b0]"}`}>
+                  <button onClick={next} disabled={submitting} className={`flex items-center gap-2 px-6 py-4 font-semibold transition disabled:opacity-70 ${stepReady ? "bg-green-500 hover:bg-green-600" : "bg-[#1e50c7] hover:bg-[#1a47b0]"}`}>
                     {step === 3 ? (submitting ? "Küldés…" : "KÉSZ!") : "TOVÁBB →"}
                   </button>
                 </div>
