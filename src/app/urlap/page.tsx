@@ -162,7 +162,7 @@ export default function UrlapPage() {
       <div className="flex flex-1 items-stretch justify-center px-0 py-0 md:items-center md:px-4 md:py-10">
         <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/50 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:bg-[#3c3c3c]/85 md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
+          <img src="/klima-plus-white.svg" alt="Klima Plus" width={1428} height={164} className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
           <h1 className="mt-6 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-3xl">
             Töltse ki űrlapunkat,{" "}
