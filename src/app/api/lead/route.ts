@@ -11,9 +11,10 @@ const NOTIFY = (process.env.LEAD_NOTIFY_EMAILS || "")
   .map((s) => s.trim())
   .filter(Boolean);
 
-// E-mail kill-switch. LEAD_EMAIL_ENABLED=false (pl. .env.local) → teszt alatt
-// NEM küld e-mailt (a form működik, a lead logba kerül). Élesítéskor töröld/true.
-const EMAILS_ENABLED = process.env.LEAD_EMAIL_ENABLED !== "false";
+// E-mail kill-switch. ALAPÉRTELMEZÉS: KIKAPCSOLVA (teszt alatt) — a form működik,
+// a lead logba kerül, de NEM megy e-mail. ÉLESÍTÉSKOR: állítsd a LEAD_EMAIL_ENABLED
+// env-változót "true"-ra (Vercel → Environment Variables) + redeploy.
+const EMAILS_ENABLED = process.env.LEAD_EMAIL_ENABLED === "true";
 
 function esc(s: unknown) {
   return String(s ?? "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] || c));

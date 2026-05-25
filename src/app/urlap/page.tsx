@@ -11,6 +11,26 @@ import { Phone, User, FileText } from "lucide-react";
 const PIXEL_ID = "1452932669308796";
 const HOUSE_TYPES = ["Családi", "Társas", "Egyéb"];
 
+// Irányítószámok kb. 10 km-re Celldömölktől → INGYENES helyszíni felmérésre jogosult.
+// ⚠️ Best-effort lista — ELLENŐRIZD/igazítsd a tényleges szolgáltatási területhez!
+const ELIGIBLE_ZIPS = new Set([
+  "9500", // Celldömölk
+  "9509", // Celldömölk – Alsóság
+  "9511", // Kemenesmihályfa
+  "9512", // Ostffyasszonyfa
+  "9513", // Csönge
+  "9521", // Kemenesszentpéter
+  "9522", // Kemenesmagasi
+  "9523", // Vönöck
+  "9531", // Mersevát
+  "9542", // Boba
+  "9551", // Mesteri
+  "9553", // Köcsk
+  "9554", // Egyházashetye
+  "9555", // Kissomlyó
+  "9561", // Nagysimonyi
+]);
+
 type FormData = {
   houseType: string;
   lastName: string;
@@ -97,6 +117,9 @@ export default function UrlapPage() {
   const inputCls =
     "mt-2 w-full rounded-lg border border-neutral-300 px-4 py-3 text-neutral-900 shadow-sm focus:border-[#2563eb] focus:outline-none focus:ring-2 focus:ring-[#2563eb]/30";
 
+  // Free on-site assessment eligibility based on the entered zip (≈10 km of Celldömölk)
+  const eligible = ELIGIBLE_ZIPS.has(data.zip.trim());
+
   return (
     <main className="relative isolate flex min-h-screen flex-col font-body">
       <Script id="meta-pixel" strategy="afterInteractive">{`
@@ -129,7 +152,7 @@ export default function UrlapPage() {
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
           <h1 className="mt-6 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-3xl">
-            Töltse ki a kérdőívünket 2 perc alatt, hogy tanácsot adhassunk!
+            Töltse ki űrlapunkat, és tudja meg,<br />jogosult-e ingyenes felmérésre!
           </h1>
 
           <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
@@ -151,13 +174,24 @@ export default function UrlapPage() {
           <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-lg md:mt-10">
             {done ? (
               <div className="px-6 py-10 text-center">
-                <h2 className="text-2xl font-bold text-green-600">
-                  Sikeres jelentkezés! :)
-                </h2>
-                <p className="mt-4 text-neutral-700">
-                  Köszönjük a jelentkezését a klíma telepítés kapcsán!<br />
-                  <strong>24 órán belül</strong> felvesszük Önnel a kapcsolatot.
-                </p>
+                {eligible ? (
+                  <>
+                    <h2 className="text-2xl font-bold text-green-600">🎉 Gratulálunk!</h2>
+                    <p className="mt-4 text-neutral-700">
+                      Az Ön irányítószáma a szolgáltatási területünkön belül van, így{" "}
+                      <strong>jogosult egy INGYENES helyszíni felmérésre!</strong><br />
+                      <strong>24 órán belül</strong> felhívjuk az időpont egyeztetéséhez.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-bold text-green-600">Sikeres jelentkezés! :)</h2>
+                    <p className="mt-4 text-neutral-700">
+                      Köszönjük a jelentkezését!<br />
+                      <strong>24 órán belül</strong> felhívjuk, és tájékoztatjuk az ingyenes felmérés lehetőségéről.
+                    </p>
+                  </>
+                )}
               </div>
             ) : (
               <>
