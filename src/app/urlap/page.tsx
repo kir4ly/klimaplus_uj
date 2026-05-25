@@ -151,11 +151,17 @@ export default function UrlapPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
-          <h1 className="mt-6 text-center text-3xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-4xl">
-            Töltse ki űrlapunkat, és tudja meg,<br />jogosult-e ingyenes felmérésre!
+          <h1 className="mt-6 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-3xl">
+            Töltse ki űrlapunkat,{" "}
+            <br className="md:hidden" />
+            és tudja meg,{" "}
+            <br className="hidden md:inline" />
+            jogosult-e{" "}
+            <br className="md:hidden" />
+            ingyenes felmérésre!
           </h1>
 
-          <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
+          <div className="-mx-5 my-6 h-px bg-white/20 md:mx-auto md:w-[440px] md:max-w-full" aria-hidden="true" />
 
           <h2 className="text-center text-2xl font-bold text-white md:text-3xl">Klímaszerelés</h2>
 
@@ -165,7 +171,7 @@ export default function UrlapPage() {
             <li>✅ Akár 10 év garancia</li>
           </ul>
 
-          <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
+          <div className="-mx-5 my-6 h-px bg-white/20 md:mx-auto md:w-[440px] md:max-w-full" aria-hidden="true" />
 
           <p className="text-center text-xl leading-relaxed text-white/90 md:text-2xl">
             <span className="font-black text-red-500">FIGYELEM!</span><br />
