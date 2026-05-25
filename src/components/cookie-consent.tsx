@@ -49,18 +49,18 @@ export default function CookieConsent() {
           Részletek
         </a>
       </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
-        <button
-          onClick={() => choose("all")}
-          className="rounded-lg bg-black px-6 py-3 font-semibold text-white transition hover:bg-neutral-800"
-        >
-          Elfogadom
-        </button>
+      <div className="mt-4 flex gap-2">
         <button
           onClick={() => choose("essential")}
-          className="rounded-lg bg-black px-6 py-3 font-semibold text-white transition hover:bg-neutral-800"
+          className="flex-1 rounded-lg bg-black px-3 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
         >
           Csak a kötelezőket
+        </button>
+        <button
+          onClick={() => choose("all")}
+          className="flex-1 rounded-lg bg-black px-3 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
+        >
+          Elfogadom
         </button>
       </div>
     </div>
