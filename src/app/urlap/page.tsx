@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Script from "next/script";
 import Image from "next/image";
 import ExitIntentPopup from "@/components/exit-intent-popup";
+import GoogleReviews from "@/components/google-reviews";
+import Testimonials from "@/components/testimonials";
 import { Phone, User, FileText } from "lucide-react";
 
 const PIXEL_ID = "1452932669308796";
@@ -122,28 +124,25 @@ export default function UrlapPage() {
       <ContactBar className="hidden md:flex" />
 
       <div className="flex flex-1 items-center justify-center px-4 py-6 md:py-10">
-        <div className="w-full max-w-2xl rounded-3xl bg-[#3c3c3c] px-7 py-10 shadow-xl md:px-14 md:py-14">
+        <div className="w-full max-w-2xl rounded-3xl bg-[#3c3c3c]/85 px-7 py-10 shadow-xl backdrop-blur-sm md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
-          <h1 className="mt-8 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-10 md:text-3xl">
-            Ne a hőség döntse el,<br />hogyan alszik a családod nyáron.
+          <h1 className="mt-6 text-center text-xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-2xl">
+            Töltse ki a kérdőívünket 2 perc alatt, hogy tanácsot adhassunk!
           </h1>
 
-          <ul className="mt-7 space-y-3 text-center text-lg text-white md:mt-8 md:text-xl">
+          <ul className="mt-6 space-y-2 text-center text-lg text-white md:mt-7 md:text-xl">
             <li>✅ Rejtett költségek nélkül</li>
             <li>✅ Nem kell utánunk takarítani</li>
             <li>✅ Akár 10 év garancia</li>
           </ul>
 
-          <p className="mt-7 text-center text-lg font-semibold text-[#ED8B3A] md:mt-8 md:text-xl">❗ Foglaljon időpontot a nyári hőség előtt ❗</p>
-          <p className="mt-4 text-center text-base text-white/90">(kitöltési idő kb. 1 perc)</p>
-
           <div className="mt-8 overflow-hidden rounded-xl bg-white shadow-lg md:mt-10">
             {done ? (
               <div className="px-6 py-10 text-center">
                 <h2 className="text-2xl font-bold text-green-600">
-                  <span className="bg-yellow-200 px-1">Sikeres</span> jelentkezés! :)
+                  Sikeres jelentkezés! :)
                 </h2>
                 <p className="mt-4 text-neutral-700">
                   Köszönjük a jelentkezését a klíma telepítés kapcsán!<br />
@@ -229,6 +228,10 @@ export default function UrlapPage() {
               </>
             )}
           </div>
+
+          <GoogleReviews />
+
+          <Testimonials />
 
           <p className="mt-6 text-center text-sm font-medium italic text-white/70">
             <a href="/adatkezeles" className="hover:underline">Adatkezelési tájékoztató</a> •{" "}

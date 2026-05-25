@@ -11,6 +11,10 @@ const NOTIFY = (process.env.LEAD_NOTIFY_EMAILS || "")
   .map((s) => s.trim())
   .filter(Boolean);
 
+// E-mail kill-switch. LEAD_EMAIL_ENABLED=false (pl. .env.local) → teszt alatt
+// NEM küld e-mailt (a form működik, a lead logba kerül). Élesítéskor töröld/true.
+const EMAILS_ENABLED = process.env.LEAD_EMAIL_ENABLED !== "false";
+
 function esc(s: unknown) {
   return String(s ?? "").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] || c));
 }
@@ -98,6 +102,12 @@ export async function POST(req: Request) {
 
   if (!d?.firstName || !d?.email || !d?.phone) {
     return NextResponse.json({ error: "Hiányzó kötelező mező" }, { status: 400 });
+  }
+
+  // Teszt alatt kikapcsolva (LEAD_EMAIL_ENABLED=false) — nem küldünk e-mailt
+  if (!EMAILS_ENABLED) {
+    console.warn("[lead] e-mail KIKAPCSOLVA (teszt) – lead csak logba:", d);
+    return NextResponse.json({ ok: true, warning: "emails-disabled" });
   }
 
   // Don't lose the lead even if email isn't configured yet
