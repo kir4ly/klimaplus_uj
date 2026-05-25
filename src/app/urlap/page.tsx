@@ -146,18 +146,18 @@ export default function UrlapPage() {
 
       <ContactBar className="hidden md:flex" />
 
-      <div className="flex flex-1 items-center justify-center px-4 py-6 md:py-10">
-        <div className="w-full max-w-2xl rounded-3xl bg-[#3c3c3c]/85 px-7 py-10 shadow-xl backdrop-blur-sm md:px-14 md:py-14">
+      <div className="flex flex-1 items-center justify-center px-0 py-6 md:px-4 md:py-10">
+        <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/75 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
-          <h1 className="mt-6 text-center text-2xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-3xl">
+          <h1 className="mt-6 text-center text-3xl font-semibold leading-snug text-[#ED8B3A] md:mt-7 md:text-4xl">
             Töltse ki űrlapunkat, és tudja meg,<br />jogosult-e ingyenes felmérésre!
           </h1>
 
           <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
 
-          <ul className="space-y-3 text-center text-xl text-white md:text-2xl">
+          <ul className="space-y-3 text-center text-2xl text-white md:text-3xl">
             <li>✅ Rejtett költségek nélkül</li>
             <li>✅ Nem kell utánunk takarítani</li>
             <li>✅ Akár 10 év garancia</li>
@@ -165,7 +165,7 @@ export default function UrlapPage() {
 
           <div className="mx-auto my-6 h-px w-[440px] max-w-full bg-white/20" aria-hidden="true" />
 
-          <p className="text-center text-lg leading-relaxed text-white/90 md:text-xl">
+          <p className="text-center text-xl leading-relaxed text-white/90 md:text-2xl">
             <span className="font-black text-red-500">FIGYELEM!</span><br />
             A nyár közeledtével gyorsan fogynak szabad időpontjaink.<br />
             Ha ezt látja, még van szabad hely.
