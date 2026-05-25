@@ -146,8 +146,8 @@ export default function UrlapPage() {
 
       <ContactBar className="hidden md:flex" />
 
-      <div className="flex flex-1 items-center justify-center px-0 py-6 md:px-4 md:py-10">
-        <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/75 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:px-14 md:py-14">
+      <div className="flex flex-1 items-stretch justify-center px-0 py-0 md:items-center md:px-4 md:py-10">
+        <div className="w-full max-w-2xl rounded-none bg-[#3c3c3c]/60 px-5 py-8 shadow-xl backdrop-blur-sm md:rounded-3xl md:px-14 md:py-14">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/klima-plus-white.svg" alt="Klima Plus" className="mx-auto block h-auto w-[80%] max-w-[460px]" />
 
