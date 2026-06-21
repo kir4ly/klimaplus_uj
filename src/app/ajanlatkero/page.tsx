@@ -243,7 +243,7 @@ export default function AjanlatkeroPage() {
   };
 
   return (
-    <main className="noise relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white font-body">
+    <main className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white font-body">
       {/* Meta pixel */}
       <Script id="meta-pixel-kalk" strategy="afterInteractive">{`
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
@@ -255,8 +255,8 @@ export default function AjanlatkeroPage() {
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
       )}
 
-      {/* Háttér fények – diszkrét kék, az arculathoz illően */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      {/* Háttér fények – diszkrét kék, az arculathoz illően. Mobilon kikapcsolva: a nagy blur a telefon GPU-t megfekteti. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden sm:block">
         <div className="absolute -left-40 top-10 h-[420px] w-[520px] rounded-full bg-blue-600/10 blur-[120px]" />
         <div className="absolute right-[-160px] top-1/3 h-[460px] w-[520px] rounded-full bg-blue-500/[0.07] blur-[130px]" />
         <div className="absolute bottom-0 left-1/3 h-[360px] w-[460px] rounded-full bg-sky-700/[0.06] blur-[130px]" />
@@ -270,7 +270,7 @@ export default function AjanlatkeroPage() {
             disabled={current === 0}
             aria-hidden={current === 0}
             aria-label="Vissza"
-            className={`absolute left-0 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-medium text-white/70 backdrop-blur transition hover:border-white/25 hover:text-white ${
+            className={`absolute left-0 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 text-sm font-medium text-white/70 transition hover:border-white/25 hover:text-white ${
               current === 0 ? "invisible" : ""
             }`}
           >
