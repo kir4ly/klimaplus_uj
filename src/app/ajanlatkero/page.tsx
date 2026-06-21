@@ -284,10 +284,10 @@ export default function AjanlatkeroPage() {
           <motion.div
             key={stepKey + (done ? "-done" : "")}
             custom={dir}
-            initial={{ opacity: 0, x: dir * 40 }}
+            initial={{ opacity: 0, x: dir * 24 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: dir * -40 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
+            exit={{ opacity: 0, x: dir * -24 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="mt-6 flex flex-1 flex-col"
           >
             {done ? (
@@ -557,11 +557,9 @@ function ProgressHeader({ step, total, progress }: { step: number; total: number
 function ProgressBar({ progress }: { progress: number }) {
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-      <motion.div
-        className="h-full rounded-full bg-gradient-to-r from-[#60a5fa] to-[#2563eb]"
-        initial={false}
-        animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+      <div
+        className="h-full rounded-full bg-gradient-to-r from-[#60a5fa] to-[#2563eb] transition-[width] duration-300 ease-out"
+        style={{ width: `${progress}%` }}
       />
     </div>
   );
