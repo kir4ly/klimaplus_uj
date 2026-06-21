@@ -456,7 +456,7 @@ export default function AjanlatkeroPage() {
                         </Field>
                         <Field label="Irányítószám *" icon={<MapPin className="h-4 w-4" />}>
                           <input
-                            inputMode="numeric"
+                            type="tel"
                             maxLength={4}
                             value={s.zip}
                             onChange={(e) => set("zip", e.target.value.replace(/\D/g, "").slice(0, 4))}
