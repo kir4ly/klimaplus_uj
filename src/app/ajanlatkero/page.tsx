@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
+import { recommend } from "@/lib/klimaPrices";
 import {
   ArrowLeft,
   ArrowRight,
@@ -54,8 +55,8 @@ const PRICE_FLOOR = 180000;
 type Brand = { label: string; logo?: string; Icon?: React.ComponentType<{ className?: string }>; exclusive?: boolean };
 const BRANDS: Brand[] = [
   { label: "Gree", logo: "/brands/gree.svg" },
-  { label: "Midea", logo: "/brands/midea.svg" },
   { label: "Syen", logo: "/brands/syen.png" },
+  { label: "Aux" }, // nincs még logó – szöveges jelvény
   { label: "Nem tudom", Icon: HelpCircle, exclusive: true },
 ];
 
@@ -210,6 +211,10 @@ export default function AjanlatkeroPage() {
       const rooms = s.rooms ?? 1;
       const roomSizes = s.sizes.slice(0, rooms).map((sz, i) => `${i + 1}. helyiség: ${sz ?? "n/a"}`);
 
+      // Belső (szerelői) ajánlás: helyiségenként a méret + kategória + márka
+      // szerinti konkrét modell + ár. A látogató NEM látja, csak az emailbe kerül.
+      const rec = recommend(s.sizes.slice(0, rooms), s.priceCategory ?? "", s.brands);
+
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -227,6 +232,8 @@ export default function AjanlatkeroPage() {
           priceCategory: s.priceCategory ?? "Egyéni",
           brands: s.brands.length ? s.brands : ["Mindegy"],
           urgency: s.urgency ?? "Nincs megadva",
+          recommended: rec.rooms.map((r, i) => ({ room: i + 1, size: r.size, picks: r.picks })),
+          recTotals: rec.totals,
           turnstileToken,
           eventId,
         }),
@@ -390,9 +397,13 @@ export default function AjanlatkeroPage() {
                                     <span className="grid h-10 w-20 shrink-0 place-items-center rounded-lg bg-white p-1.5">
                                       <img src={b.logo} alt={b.label} className="max-h-full max-w-full object-contain" />
                                     </span>
-                                  ) : (
+                                  ) : Icon ? (
                                     <span className="grid h-10 w-20 shrink-0 place-items-center rounded-lg bg-white/[0.04]">
-                                      {Icon && <Icon className="h-5 w-5 text-blue-400" />}
+                                      <Icon className="h-5 w-5 text-blue-400" />
+                                    </span>
+                                  ) : (
+                                    <span className="grid h-10 w-20 shrink-0 place-items-center rounded-lg bg-white text-base font-extrabold tracking-wide text-neutral-900">
+                                      {b.label.toUpperCase()}
                                     </span>
                                   )}
                                   <span className="flex-1 text-lg font-semibold">{b.label}</span>

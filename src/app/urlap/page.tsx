@@ -94,13 +94,24 @@ export default function UrlapPage() {
 
     setSubmitting(true);
     try {
+      // Közös event_id a szerveroldali (CAPI) és a böngészős Lead esemény
+      // dedupjához — így a Meta nem számolja kétszer a beleegyező usereknél.
+      const eventId =
+        typeof crypto !== "undefined" && crypto.randomUUID
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, eventId }),
       });
       if (!res.ok) throw new Error("submit failed");
-      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.("track", "Lead");
+      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(
+        "track",
+        "Lead",
+        {},
+        { eventID: eventId },
+      );
       setDone(true);
     } catch {
       setError("Hiba történt a küldés során. Kérlek próbáld újra.");
