@@ -256,3 +256,92 @@ export function recommend(
 
   return { rooms, totals };
 }
+
+// --- Vásárlói árajánlat (customer-facing) -----------------------------------
+// A recommend() egy márkánkénti "legjobb" modellt ad a szerelőnek. A vásárlói
+// árajánlathoz helyiségenként TÖBB opciót mutatunk (a kiválasztott márkák
+// illő modelljei), a legolcsóbbat kiemelve, és a telepítési díjjal + végösszeggel.
+
+// Egy márkából egy helyiséghez illő modellek. Elsőként pontosan a kért
+// kategóriát nézi; ha ott nincs (és a fallback engedélyezett), a legközelebbi
+// létező kategóriától lefelé keres olyat, aminek van erre a méretre változata.
+function optionsForBrand(
+  brand: BrandKey,
+  wantedCat: CategoryKey,
+  size: SizeKey,
+  allowFallback: boolean,
+): Pick[] {
+  const toPicks = (cat: CategoryKey) =>
+    MODELS.filter((m) => m.brand === brand && m.category === cat && m.variants[size]).map((m) => {
+      const v = m.variants[size]!;
+      return { brand, model: m.model, kw: v.kw, price: v.price };
+    });
+  const exact = toPicks(wantedCat);
+  if (exact.length || !allowFallback) return exact;
+  const start = nearestCategory(brand, wantedCat);
+  if (!start) return [];
+  for (let i = CATEGORY_ORDER.indexOf(start); i >= 0; i--) {
+    const got = toPicks(CATEGORY_ORDER[i]);
+    if (got.length) return got;
+  }
+  return [];
+}
+
+// Az összes illő modell a kiválasztott márkákból, ár szerint növekvő sorrendben.
+function collectOptions(
+  brands: BrandKey[],
+  wantedCat: CategoryKey | null,
+  size: SizeKey | null,
+  allowFallback: boolean,
+): Pick[] {
+  if (!size || !wantedCat) return [];
+  const out: Pick[] = [];
+  for (const brand of brands) out.push(...optionsForBrand(brand, wantedCat, size, allowFallback));
+  return out.sort((a, b) => a.price - b.price);
+}
+
+export type QuoteRoom = { size: string; options: Pick[]; cheapest: Pick | null };
+export type Quote = {
+  rooms: QuoteRoom[];
+  installPerUnit: number;
+  unitCount: number; // ahány helyiségre van érvényes ajánlat
+  productsTotal: number; // a legolcsóbb opciók összege
+  installTotal: number;
+  grandTotal: number;
+};
+
+// A teljes vásárlói árajánlat: helyiségenként opciók + a legolcsóbb opcióval
+// számolt végösszeg (készülék + telepítés).
+export function buildQuote(
+  sizeLabels: (string | null)[],
+  categoryLabel: string,
+  brandLabels: string[],
+  installPerUnit: number,
+): Quote {
+  const catKey = CATEGORY_LABEL_TO_KEY[categoryLabel] ?? null;
+  const explicit = ALL_BRANDS.filter((b) => brandLabels.includes(b));
+  const isMindegy = explicit.length === 0;
+  const brands = isMindegy ? ALL_BRANDS : explicit;
+
+  const rooms: QuoteRoom[] = sizeLabels.map((label) => {
+    const sizeKey = label ? SIZE_LABEL_TO_KEY[label] ?? null : null;
+    // "Mindegy": maradunk a kért kategóriában (nem húzunk be alacsonyabb tier-t
+    // más márkából). Ha egyik márkának sincs rá modellje, engedünk fallbackot.
+    // Konkrét márka esetén: fallback – a márka legjobb elérhető modelljét mutatjuk.
+    let options = collectOptions(brands, catKey, sizeKey, !isMindegy);
+    if (isMindegy && !options.length) options = collectOptions(brands, catKey, sizeKey, true);
+    return { size: label ?? "n/a", options, cheapest: options[0] ?? null };
+  });
+
+  const unitCount = rooms.filter((r) => r.cheapest).length;
+  const productsTotal = rooms.reduce((sum, r) => sum + (r.cheapest?.price ?? 0), 0);
+  const installTotal = installPerUnit * unitCount;
+  return {
+    rooms,
+    installPerUnit,
+    unitCount,
+    productsTotal,
+    installTotal,
+    grandTotal: productsTotal + installTotal,
+  };
+}

@@ -228,6 +228,7 @@ export default function AjanlatkeroPage() {
           source: "ajanlatkero",
           rooms,
           roomSizes,
+          sizes: s.sizes.slice(0, rooms), // nyers méret-címkék a szerveroldali árajánlathoz
           priceRange: `${huf(s.priceMin)} – ${huf(s.priceMax)}`,
           priceCategory: s.priceCategory ?? "Egyéni",
           brands: s.brands.length ? s.brands : ["Mindegy"],
@@ -298,7 +299,7 @@ export default function AjanlatkeroPage() {
             className="mt-6 flex flex-1 flex-col"
           >
             {done ? (
-              <ThankYou name={s.name} />
+              <ThankYou name={s.name} email={s.email} />
             ) : (
               <>
                 {/* Progress fejléc minden lépésnél */}
@@ -666,17 +667,27 @@ function Field({ label, icon, children }: { label: string; icon: React.ReactNode
   );
 }
 
-function ThankYou({ name }: { name: string }) {
+function ThankYou({ name, email }: { name: string; email: string }) {
   const first = name.trim().split(/\s+/).slice(-1)[0] || "";
   return (
     <div className="flex flex-1 flex-col items-center pt-16 text-center">
-      <div className="grid h-20 w-20 place-items-center rounded-full border border-blue-400/20 bg-blue-500/10">
-        <Check className="h-10 w-10 text-blue-400" />
+      <div className="grid h-20 w-20 place-items-center rounded-full border border-emerald-400/25 bg-emerald-500/10">
+        <Check className="h-10 w-10 text-emerald-400" />
       </div>
-      <h1 className="mt-7 text-3xl font-extrabold sm:text-4xl">Köszönjük{first ? `, ${first}` : ""}!</h1>
+      <h1 className="mt-7 text-3xl font-extrabold sm:text-4xl">
+        Ajánlatát elküldtük{first ? `, ${first}` : ""}!
+      </h1>
       <p className="mt-4 max-w-md text-lg text-white/55">
-        Megkaptuk az adatait. Elkészítjük a személyre szabott ajánlatát, és{" "}
-        <span className="font-semibold text-white/80">24 órán belül</span> felvesszük Önnel a kapcsolatot.
+        A részletes, személyre szabott árajánlatot elküldtük ide:
+        {email ? (
+          <>
+            {" "}
+            <span className="font-semibold text-white/85">{email}</span>
+          </>
+        ) : (
+          " a megadott email címre"
+        )}
+        . Ha nem találja, nézze meg a Spam mappát is.
       </p>
       <a
         href="tel:+36702566448"
