@@ -5,12 +5,12 @@ import { buildQuote, type Quote } from "@/lib/klimaPrices";
 
 export const runtime = "nodejs";
 
-// --- Meta Conversions API (szerveroldali Lead esemény) ----------------------
-// A böngészős pixel csak akkor sül el, ha a látogató elfogadja a marketing
-// cookie-kat — magyar usereknél a többség nem. Ezért a Lead eseményt
-// szerverről IS elküldjük a Metának, cookie-tól és ad blockertől függetlenül.
-// Így minden jelentkezést lát a Meta és tud rá optimalizálni.
-const META_PIXEL_ID = process.env.META_PIXEL_ID || "1452932669308796";
+// --- Meta Conversions API (szerveroldali) -----------------------------------
+// Separate pixels per landing page:
+// - /ajanlatkero (new) → new pixel + "Érdeklődő" event
+// - /urlap (old) + others → old pixel + "Lead" event
+const OLD_PIXEL_ID = process.env.OLD_META_PIXEL_ID || "1452932669308796";
+const NEW_PIXEL_ID = process.env.NEW_META_PIXEL_ID || "4526635934216768";
 const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN;
 
 function sha256(v: string) {
@@ -31,37 +31,62 @@ async function sendMetaLead(d: Lead, req: Request) {
     console.warn("[lead] META_CAPI_TOKEN hiányzik – Meta Conversions API kihagyva");
     return;
   }
+
+  const isNewPage = d.source === "ajanlatkero";
+  const pixelId = isNewPage ? NEW_PIXEL_ID : OLD_PIXEL_ID;
+
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   const ua = req.headers.get("user-agent") || undefined;
-  const referer = req.headers.get("referer") || "https://klimapluscell.hu/urlap";
+  const referer = req.headers.get("referer") || (isNewPage ? "https://klimapluscell.hu/ajanlatkero" : "https://klimapluscell.hu/urlap");
 
   const user_data: Record<string, unknown> = {};
   if (ip) user_data.client_ip_address = ip;
   if (ua) user_data.client_user_agent = ua;
   // Hashelt azonosító (jobb párosítás) CSAK ha a user az űrlapon
-  // hozzájárult a marketinghez. Enélkül de-identifikált a konverzió.
+  // hozzájárult a marketinghez. Ennélkül de-identifikált a konverzió.
   if (d.marketingConsent) {
     if (d.email) user_data.em = [sha256(d.email)];
     if (d.phone) user_data.ph = [sha256(normPhone(d.phone))];
   }
 
-  const event: Record<string, unknown> = {
-    event_name: "Lead",
-    event_time: Math.floor(Date.now() / 1000),
-    action_source: "website",
-    event_source_url: referer,
-    user_data,
-  };
-  // Dedup a böngészős pixellel: ugyanaz az event_id → a Meta nem számol kétszer.
-  if (d.eventId) event.event_id = d.eventId;
+  // Dedup ID shared between browser pixel and CAPI
+  const eventId = d.eventId;
+
+  let events: any[];
+
+  if (isNewPage) {
+    // New /ajanlatkero landing page → new pixel + Érdeklődő conversion
+    events = [
+      {
+        event_name: "Érdeklődő",
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: "website",
+        event_source_url: referer,
+        user_data,
+        ...(eventId ? { event_id: eventId } : {}),
+      },
+    ];
+  } else {
+    // Old /urlap and other sources → old pixel + standard Lead
+    events = [
+      {
+        event_name: "Lead",
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: "website",
+        event_source_url: referer,
+        user_data,
+        ...(eventId ? { event_id: eventId } : {}),
+      },
+    ];
+  }
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v23.0/${META_PIXEL_ID}/events?access_token=${META_CAPI_TOKEN}`,
+      `https://graph.facebook.com/v23.0/${pixelId}/events?access_token=${META_CAPI_TOKEN}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: [event] }),
+        body: JSON.stringify({ data: events }),
       },
     );
     if (!res.ok) {

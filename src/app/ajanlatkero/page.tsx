@@ -26,7 +26,6 @@ import {
   Check,
 } from "lucide-react";
 
-const PIXEL_ID = "1452932669308796";
 // Cloudflare Turnstile – csak akkor jelenik meg, ha be van állítva a site key.
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
@@ -240,7 +239,12 @@ export default function AjanlatkeroPage() {
         }),
       });
       if (!res.ok) throw new Error("submit failed");
-      (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.("track", "Lead", {}, { eventID: eventId });
+
+      const fbq = (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq;
+      // Standard Lead + custom event matching the Meta setup ("Érdeklődő")
+      fbq?.("track", "Lead", {}, { eventID: eventId });
+      fbq?.("trackCustom", "Érdeklődő", { source: "ajanlatkero" }, { eventID: eventId });
+
       setDone(true);
       scrollTop();
     } catch {
@@ -252,13 +256,23 @@ export default function AjanlatkeroPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-white font-body">
-      {/* Meta pixel */}
-      <Script id="meta-pixel-kalk" strategy="afterInteractive">{`
+      {/* Meta Pixel - NEW pixel ONLY for /ajanlatkero (new landing page) */}
+      <Script id="meta-pixel-ajanlatkero" strategy="afterInteractive">{`
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
         var c=null;try{c=localStorage.getItem('klima-cookie-consent')}catch(e){}
         fbq('consent', c==='all' ? 'grant' : 'revoke');
-        fbq('init','${PIXEL_ID}');fbq('track','PageView');
+        fbq('init','4526635934216768');fbq('track','PageView');
       `}</Script>
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          alt=""
+          src="https://www.facebook.com/tr?id=4526635934216768&ev=PageView&noscript=1"
+        />
+      </noscript>
+
       {TURNSTILE_SITE_KEY && (
         <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
       )}
