@@ -130,6 +130,18 @@ export default function AjanlatkeroPage() {
     };
   }, []);
 
+  // Grant the Meta pixel consent if the visitor accepts marketing cookies
+  // (the pixel boots in "revoke" state, so nothing fires until then).
+  // Same logic as on the other landing page (/urlap).
+  useEffect(() => {
+    const grant = () => (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.("consent", "grant");
+    const onChange = (e: Event) => {
+      if ((e as CustomEvent).detail === "all") grant();
+    };
+    window.addEventListener("cookie-consent-changed", onChange);
+    return () => window.removeEventListener("cookie-consent-changed", onChange);
+  }, []);
+
   const goNext = (delay = 0) => {
     setDir(1);
     setError("");

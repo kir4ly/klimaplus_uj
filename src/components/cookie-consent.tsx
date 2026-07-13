@@ -14,7 +14,8 @@ export default function CookieConsent() {
     try {
       stored = localStorage.getItem(CONSENT_KEY);
     } catch {}
-    if (stored === "all" || stored === "essential") return;
+    if (process.env.NODE_ENV !== 'development' && (stored === "all" || stored === "essential")) return;
+    // In development we always show the banner so you can easily test the popup + pixel consent.
     // Defer into a frame so we don't call setState synchronously in the effect
     // body; the second frame flips `shown` to trigger the slide-in transition.
     const raf = requestAnimationFrame(() => {
@@ -39,7 +40,7 @@ export default function CookieConsent() {
     <div
       role="dialog"
       aria-label="Sütikezelési tájékoztató"
-      className={`fixed bottom-4 right-4 z-[100] max-w-[min(440px,calc(100vw-2rem))] rounded-xl bg-[#fbecc8] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.22)] ring-1 ring-black/5 transition-all duration-300 ${
+      className={`fixed bottom-4 right-4 z-[999] max-w-[min(440px,calc(100vw-2rem))] rounded-xl bg-[#fbecc8] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.22)] ring-1 ring-black/5 transition-all duration-300 ${
         shown ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
       }`}
     >
