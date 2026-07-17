@@ -81,6 +81,7 @@ type State = {
   zip: string;
   email: string;
   marketing: boolean;
+  siteSurvey: "callback" | "information_only" | null;
 };
 
 export default function AjanlatkeroPage() {
@@ -97,6 +98,7 @@ export default function AjanlatkeroPage() {
     zip: "",
     email: "",
     marketing: false,
+    siteSurvey: null,
   });
   const [current, setCurrent] = useState(0);
   const [dir, setDir] = useState(1);
@@ -110,7 +112,7 @@ export default function AjanlatkeroPage() {
   // Dinamikus lépéslista: a helyiségek száma szerint nő.
   const steps = useMemo<string[]>(() => {
     const sizeSteps = Array.from({ length: s.rooms ?? 0 }, (_, i) => `size-${i}`);
-    return ["rooms", ...sizeSteps, "price", "brand", "urgency", "contact"];
+    return ["rooms", ...sizeSteps, "price", "brand", "urgency", "contact", "survey"];
   }, [s.rooms]);
 
   const total = steps.length;
@@ -236,6 +238,7 @@ export default function AjanlatkeroPage() {
           zip: s.zip.trim(),
           consent: true,
           marketingConsent: s.marketing,
+          siteSurvey: s.siteSurvey,
           source: "ajanlatkero",
           rooms,
           roomSizes,
@@ -248,6 +251,8 @@ export default function AjanlatkeroPage() {
           recTotals: rec.totals,
           turnstileToken,
           eventId,
+          // Pontos URL a CAPI dedup jobb működéséhez (event_source_url)
+          pageUrl: window.location.href,
         }),
       });
       if (!res.ok) throw new Error("submit failed");
@@ -473,7 +478,7 @@ export default function AjanlatkeroPage() {
                   )}
 
                   {stepKey === "contact" && (
-                    <Step title="Utolsó lépés" subtitle="Adja meg elérhetőségét és küldjük az ajánlatot.">
+                    <Step title="Kapcsolati adatok" subtitle="Adja meg elérhetőségét, hogy elküldhessük az ajánlatot.">
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <Field label="Név *" icon={<User className="h-4 w-4" />}>
                           <input
@@ -555,7 +560,38 @@ export default function AjanlatkeroPage() {
 
                       {error && <p className="mt-4 text-sm font-medium text-red-400">{error}</p>}
 
-                      <PrimaryButton onClick={submit} disabled={submitting || !contactValid} className="text-xl">
+                      <PrimaryButton onClick={() => goNext()} disabled={!contactValid} className="text-xl">
+                        Tovább
+                        <ArrowRight className="h-5 w-5" />
+                      </PrimaryButton>
+                    </Step>
+                  )}
+
+                  {stepKey === "survey" && (
+                    <Step
+                      title="Érdekelné egy helyszíni felmérés?"
+                      subtitle="Szakemberünk felméri a helyszíni adottságokat, és elmondja, hogyan nézne ki a klíma telepítése."
+                    >
+                      <div className="grid grid-cols-1 gap-3">
+                        <OptionCard
+                          selected={s.siteSurvey === "callback"}
+                          onClick={() => set("siteSurvey", "callback")}
+                          title="Igen, érdekel a helyszíni felmérés, kérek visszahívást."
+                        />
+                        <OptionCard
+                          selected={s.siteSurvey === "information_only"}
+                          onClick={() => set("siteSurvey", "information_only")}
+                          title="Nem, egyelőre csak tájékozódom."
+                        />
+                      </div>
+
+                      {error && <p className="mt-4 text-sm font-medium text-red-400">{error}</p>}
+
+                      <PrimaryButton
+                        onClick={submit}
+                        disabled={submitting}
+                        className="text-xl"
+                      >
                         {submitting ? (
                           <>
                             <Loader2 className="h-5 w-5 animate-spin" /> Küldés…

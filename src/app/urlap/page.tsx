@@ -102,7 +102,7 @@ export default function UrlapPage() {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, eventId }),
+        body: JSON.stringify({ ...data, eventId, pageUrl: window.location.href }),
       });
       if (!res.ok) throw new Error("submit failed");
       (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq?.(

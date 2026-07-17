@@ -37,7 +37,10 @@ async function sendMetaLead(d: Lead, req: Request) {
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
   const ua = req.headers.get("user-agent") || undefined;
-  const referer = req.headers.get("referer") || (isNewPage ? "https://klimapluscell.hu/ajanlatkero" : "https://klimapluscell.hu/urlap");
+
+  // Jobb dedup: használjuk az ügyfél által küldött pontos URL-t, ha van (www is)
+  const fallback = isNewPage ? "https://www.klimapluscell.hu/ajanlatkero" : "https://www.klimapluscell.hu/urlap";
+  const eventSourceUrl = d.pageUrl || req.headers.get("referer") || fallback;
 
   const user_data: Record<string, unknown> = {};
   if (ip) user_data.client_ip_address = ip;
@@ -52,7 +55,7 @@ async function sendMetaLead(d: Lead, req: Request) {
   // Dedup ID shared between browser pixel and CAPI
   const eventId = d.eventId;
 
-  let events: any[];
+  let events: Record<string, unknown>[];
 
   if (isNewPage) {
     // New /ajanlatkero landing page → new pixel + Érdeklődő conversion
@@ -61,8 +64,9 @@ async function sendMetaLead(d: Lead, req: Request) {
         event_name: "Érdeklődő",
         event_time: Math.floor(Date.now() / 1000),
         action_source: "website",
-        event_source_url: referer,
+        event_source_url: eventSourceUrl,
         user_data,
+        custom_data: { source: "ajanlatkero" },
         ...(eventId ? { event_id: eventId } : {}),
       },
     ];
@@ -73,7 +77,7 @@ async function sendMetaLead(d: Lead, req: Request) {
         event_name: "Lead",
         event_time: Math.floor(Date.now() / 1000),
         action_source: "website",
-        event_source_url: referer,
+        event_source_url: eventSourceUrl,
         user_data,
         ...(eventId ? { event_id: eventId } : {}),
       },
@@ -162,6 +166,9 @@ type Lead = {
   houseType?: string; lastName?: string; firstName?: string;
   email?: string; phone?: string; marketingConsent?: boolean; zip?: string;
   eventId?: string;
+  siteSurvey?: "callback" | "information_only" | null;
+  // Átadjuk a pontos oldalcímet a jobb CAPI deduplikációhoz (event_source_url)
+  pageUrl?: string;
   // Ajánlatkérő kalkulátor (/ajanlatkero) extra mezői – opcionálisak
   source?: string; city?: string; consent?: boolean;
   rooms?: number; roomSizes?: string[]; priceRange?: string;
@@ -394,17 +401,26 @@ function notifyHtml(d: Lead) {
   const telHref = (d.phone ?? "").replace(/[^\d+]/g, "");
   const when = new Date().toLocaleString("hu-HU", { timeZone: "Europe/Budapest" });
   const location = esc(d.city) || esc(d.zip) || "—";
+  const surveyStatus =
+    d.siteSurvey === "callback"
+      ? `<p style="margin:0 0 18px;font-size:17px;"><strong>Visszahívást kér:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>`
+      : d.siteSurvey === "information_only"
+        ? `<p style="margin:0 0 18px;font-size:17px;"><strong style="color:#c2630f;">Egyelőre csak tájékozódik – nem kér visszahívást.</strong></p>`
+        : d.source !== "ajanlatkero"
+          ? `<p style="margin:0 0 18px;font-size:17px;"><strong>Hívd fel mielőbb:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>`
+          : "";
   return `<!doctype html>
 <html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:#ffffff;">
 <div style="max-width:560px;margin:0 auto;padding:28px 24px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#222222;">
   <h1 style="margin:0 0 14px;font-size:19px;">Új jelentkezés – Klima Plus${d.source === "ajanlatkero" ? " (Ajánlatkérő)" : ""}</h1>
-  <p style="margin:0 0 18px;font-size:17px;"><strong>Hívd fel mielőbb:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>
+  ${surveyStatus}
   <p style="margin:0;">
     <strong>Név:</strong> ${esc(fullName)}<br>
     <strong>E-mail:</strong> <a href="mailto:${esc(d.email)}" style="color:#1f9fd6;text-decoration:none;">${esc(d.email)}</a><br>
     <strong>Település / ISZ:</strong> ${location}<br>
     <strong>Háztípus:</strong> ${esc(d.houseType) || "—"}<br>
+    ${d.source === "ajanlatkero" && d.siteSurvey ? `<strong>Helyszíni felmérés:</strong> ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}<br>` : ""}
     <strong>Marketing hozzájárulás:</strong> ${d.marketingConsent ? "igen" : "nem"}<br>
     <strong>Beérkezett:</strong> ${esc(when)}
   </p>
@@ -416,6 +432,14 @@ function notifyHtml(d: Lead) {
 
 function notifyText(d: Lead) {
   const fullName = `${d.lastName ?? ""} ${d.firstName ?? ""}`.trim() || "—";
+  const surveyStatus =
+    d.siteSurvey === "callback"
+      ? `Visszahívást kér: ${d.phone ?? "—"}\n\n`
+      : d.siteSurvey === "information_only"
+        ? "Egyelőre csak tájékozódik – nem kér visszahívást.\n\n"
+        : d.source !== "ajanlatkero"
+          ? `Hívd fel mielőbb: ${d.phone ?? "—"}\n\n`
+          : "";
   const calc =
     d.source === "ajanlatkero"
       ? `
@@ -429,13 +453,11 @@ Sürgősség: ${d.urgency ?? "—"}`
       : "";
   return `Új jelentkezés – Klima Plus
 
-Hívd fel mielőbb: ${d.phone ?? "—"}
-
-Név: ${fullName}
+${surveyStatus}Név: ${fullName}
 E-mail: ${d.email ?? "—"}
 Település / ISZ: ${d.city ?? d.zip ?? "—"}
 Háztípus: ${d.houseType ?? "—"}
-Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}${calc}${recText(d)}`;
+${d.source === "ajanlatkero" && d.siteSurvey ? `Helyszíni felmérés: ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}\n` : ""}Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}${calc}${recText(d)}`;
 }
 
 export async function POST(req: Request) {
