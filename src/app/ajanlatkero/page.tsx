@@ -569,19 +569,19 @@ export default function AjanlatkeroPage() {
 
                   {stepKey === "survey" && (
                     <Step
-                      title="Érdekelné egy helyszíni felmérés?"
+                      title="Derítse ki jár-e Önnek INGYENES helyszíni felmérés!"
                       subtitle="Szakemberünk felméri a helyszíni adottságokat, és elmondja, hogyan nézne ki a klíma telepítése."
                     >
                       <div className="grid grid-cols-1 gap-3">
                         <OptionCard
                           selected={s.siteSurvey === "callback"}
                           onClick={() => set("siteSurvey", "callback")}
-                          title="Igen, érdekel a helyszíni felmérés, kérek visszahívást."
+                          title="Kérem az ingyenes helyszíni felmérést."
                         />
                         <OptionCard
                           selected={s.siteSurvey === "information_only"}
                           onClick={() => set("siteSurvey", "information_only")}
-                          title="Nem, egyelőre csak tájékozódom."
+                          title="Inkább lemondok az ingyenes szakértői felmérésről."
                         />
                       </div>
 
