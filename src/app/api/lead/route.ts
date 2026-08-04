@@ -403,7 +403,7 @@ function notifyHtml(d: Lead) {
   const location = esc(d.city) || esc(d.zip) || "—";
   const surveyStatus =
     d.siteSurvey === "callback"
-      ? `<p style="margin:0 0 18px;font-size:17px;"><strong>Visszahívást kér:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>`
+      ? `<p style="margin:0 0 18px;font-size:17px;"><strong>Visszahívást kér és érdekli ingyenes helyszíni felmérés:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;font-weight:bold;">${esc(d.phone)}</a></p>`
       : d.siteSurvey === "information_only"
         ? `<p style="margin:0 0 18px;font-size:17px;"><strong style="color:#c2630f;">Egyelőre csak tájékozódik – nem kér visszahívást.</strong></p>`
         : d.source !== "ajanlatkero"
@@ -434,7 +434,7 @@ function notifyText(d: Lead) {
   const fullName = `${d.lastName ?? ""} ${d.firstName ?? ""}`.trim() || "—";
   const surveyStatus =
     d.siteSurvey === "callback"
-      ? `Visszahívást kér: ${d.phone ?? "—"}\n\n`
+      ? `Visszahívást kér és érdekli ingyenes helyszíni felmérés: ${d.phone ?? "—"}\n\n`
       : d.siteSurvey === "information_only"
         ? "Egyelőre csak tájékozódik – nem kér visszahívást.\n\n"
         : d.source !== "ajanlatkero"
