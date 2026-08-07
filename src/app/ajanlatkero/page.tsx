@@ -213,6 +213,10 @@ export default function AjanlatkeroPage() {
       setError("Kérjük töltse ki az összes kötelező mezőt.");
       return;
     }
+    if (!s.siteSurvey) {
+      setError("Kérjük válasszon a helyszíni felmérés lehetőségei közül.");
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
@@ -575,12 +579,18 @@ export default function AjanlatkeroPage() {
                       <div className="grid grid-cols-1 gap-3">
                         <OptionCard
                           selected={s.siteSurvey === "callback"}
-                          onClick={() => set("siteSurvey", "callback")}
+                          onClick={() => {
+                            set("siteSurvey", "callback");
+                            setError("");
+                          }}
                           title="Kérem az ingyenes helyszíni felmérést."
                         />
                         <OptionCard
                           selected={s.siteSurvey === "information_only"}
-                          onClick={() => set("siteSurvey", "information_only")}
+                          onClick={() => {
+                            set("siteSurvey", "information_only");
+                            setError("");
+                          }}
                           title="Inkább lemondok az ingyenes szakértői felmérésről."
                         />
                       </div>
@@ -589,7 +599,7 @@ export default function AjanlatkeroPage() {
 
                       <PrimaryButton
                         onClick={submit}
-                        disabled={submitting}
+                        disabled={submitting || !s.siteSurvey}
                         className="text-xl"
                       >
                         {submitting ? (

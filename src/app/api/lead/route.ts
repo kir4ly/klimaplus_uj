@@ -418,6 +418,7 @@ function notifyHtml(d: Lead) {
   <p style="margin:0;">
     <strong>Név:</strong> ${esc(fullName)}<br>
     <strong>E-mail:</strong> <a href="mailto:${esc(d.email)}" style="color:#1f9fd6;text-decoration:none;">${esc(d.email)}</a><br>
+    <strong>Telefonszám:</strong> <a href="tel:${telHref}" style="color:#1f9fd6;text-decoration:none;">${esc(d.phone) || "—"}</a><br>
     <strong>Település / ISZ:</strong> ${location}<br>
     <strong>Háztípus:</strong> ${esc(d.houseType) || "—"}<br>
     ${d.source === "ajanlatkero" && d.siteSurvey ? `<strong>Helyszíni felmérés:</strong> ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}<br>` : ""}
@@ -455,6 +456,7 @@ Sürgősség: ${d.urgency ?? "—"}`
 
 ${surveyStatus}Név: ${fullName}
 E-mail: ${d.email ?? "—"}
+Telefonszám: ${d.phone ?? "—"}
 Település / ISZ: ${d.city ?? d.zip ?? "—"}
 Háztípus: ${d.houseType ?? "—"}
 ${d.source === "ajanlatkero" && d.siteSurvey ? `Helyszíni felmérés: ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}\n` : ""}Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}${calc}${recText(d)}`;
@@ -470,6 +472,14 @@ export async function POST(req: Request) {
 
   if (!d?.firstName || !d?.email || !d?.phone) {
     return NextResponse.json({ error: "Hiányzó kötelező mező" }, { status: 400 });
+  }
+
+  if (
+    d.source === "ajanlatkero" &&
+    d.siteSurvey !== "callback" &&
+    d.siteSurvey !== "information_only"
+  ) {
+    return NextResponse.json({ error: "Hiányzó helyszíni felmérés választás" }, { status: 400 });
   }
 
   // Cloudflare Turnstile ellenőrzés – CSAK ha be van állítva a secret kulcs.
