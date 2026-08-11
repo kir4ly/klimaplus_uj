@@ -105,14 +105,11 @@ async function sendMetaLead(d: Lead, req: Request) {
 // stable — the old LEAD_FROM_EMAIL env var on Vercel is now unused.
 const FROM = "Klima Plus <noreply@klimapluscell.hu>";
 
-// A szerelő által megadott árak a telepítést IS tartalmazzák (kulcsrakész),
-// ezért alapból NINCS külön telepítési díj. Ha mégis külön díjat kell felszámolni
-// klímánként, állítsd a LEAD_INSTALL_FEE env-et (>0) – ekkor külön tételként jelenik meg.
-const INSTALL_FEE_PER_UNIT = Number(process.env.LEAD_INSTALL_FEE || 0);
-const INSTALL_INCLUDED_NOTE =
-  "A feltüntetett árak a készüléket és a szakszerű telepítést is tartalmazzák. Egyedi helyszíni adottságok (pl. hosszú csőszakasz) esetén az ár változhat, amit a helyszíni felmérés után pontosítunk.";
-const INSTALL_EXTRA_NOTE =
-  "A telepítési díj 3 méter csőszakaszig érvényes. Hosszabb csőszakasz esetén egyedi árajánlatot készítünk.";
+// Az adatbázisban szereplő összegek kizárólag készülékárak. A szerelés díját
+// nem ismerjük, ezért az emailben nem adjuk hozzá a kalkulált összeghez.
+const INSTALL_FEE_PER_UNIT = 0;
+const DEVICE_PRICE_NOTE =
+  "A feltüntetett árak kizárólag a klímaberendezések árát tartalmazzák. A szerelés díja nincs benne; arra a helyszíni felmérés után külön ajánlatot adunk.";
 const NOTIFY = (process.env.LEAD_NOTIFY_EMAILS || "")
   .split(",")
   .map((s) => s.trim())
@@ -174,78 +171,40 @@ type Lead = {
   rooms?: number; roomSizes?: string[]; priceRange?: string;
   sizes?: (string | null)[]; // nyers méret-címkék a vásárlói árajánlat számításához
   priceCategory?: string; brands?: string[]; urgency?: string;
-  // Belső ajánlás: helyiségenként a méret + kategória + márka szerinti modell + ár.
-  recommended?: { room: number; size: string; picks: RecPick[] }[];
-  recTotals?: { brand: string; total: number }[];
   turnstileToken?: string;
 };
 
-type RecPick = { brand: string; model: string; kw: number; price: number };
-
-// Az ajánlatkérő kalkulátorból (/ajanlatkero) érkező extra adatok blokkja.
-function calcBlockHtml(d: Lead) {
-  if (d.source !== "ajanlatkero") return "";
+function quoteCriteriaHtml(d: Lead, title: string) {
   const sizes = (d.roomSizes ?? []).map((x) => esc(x)).join("<br>") || "—";
   const brands = (d.brands ?? []).map((x) => esc(x)).join(", ") || "Mindegy";
+  const price = `${esc(d.priceRange) || "—"}${d.priceCategory ? ` (${esc(d.priceCategory)})` : ""}`;
   return `
   <div style="margin:18px 0;padding:14px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;">
-    <p style="margin:0 0 8px;font-weight:bold;color:#c2630f;">🧮 Ajánlatkérő kalkulátor</p>
+    <p style="margin:0 0 8px;font-weight:bold;color:#c2630f;">${title}</p>
     <strong>Helyiségek:</strong> ${esc(d.rooms) || "—"} db<br>
     <strong>Méretek:</strong><br>${sizes}<br>
-    <strong>Ár-tartomány:</strong> ${esc(d.priceRange) || "—"} ${d.priceCategory ? `(${esc(d.priceCategory)})` : ""}<br>
+    <strong>Ár-tartomány:</strong> ${price}<br>
     <strong>Márka:</strong> ${brands}<br>
     <strong>Sürgősség:</strong> ${esc(d.urgency) || "—"}
   </div>`;
 }
 
-// Belső ajánlás blokk – konkrét modellek + készülék-listaárak a szerelőnek.
-// A látogató ezt NEM látja, csak a szerelői értesítő emailbe kerül.
-function recBlockHtml(d: Lead) {
-  if (d.source !== "ajanlatkero" || !d.recommended?.length) return "";
-  const rooms = d.recommended
-    .map((r) => {
-      const items =
-        (r.picks ?? [])
-          .map(
-            (p) =>
-              `<li>${esc(p.brand)} ${esc(p.model)} – ${esc(p.kw)} kW – <strong>${ft(p.price)}</strong></li>`,
-          )
-          .join("") || `<li style="color:#999;">nincs illő modell</li>`;
-      return `<p style="margin:10px 0 2px;font-weight:bold;">${esc(r.room)}. helyiség (${esc(r.size)}):</p>
-      <ul style="margin:0 0 6px;padding-left:18px;">${items}</ul>`;
-    })
-    .join("");
-  const totals = (d.recTotals ?? [])
-    .map((t) => `${esc(t.brand)}: <strong>${ft(t.total)}</strong>`)
-    .join(" · ");
-  return `
-  <div style="margin:18px 0;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;">
-    <p style="margin:0 0 4px;font-weight:bold;color:#1d4ed8;">🛠️ Javasolt modellek (belső – készülék-listaár, szerelés nélkül)</p>
-    ${rooms}
-    ${totals ? `<p style="margin:8px 0 0;">Becsült készülék-összeg: ${totals}</p>` : ""}
-  </div>`;
+function quoteCriteriaText(d: Lead) {
+  return `Helyiségek: ${d.rooms ?? "—"} db
+Méretek:
+${(d.roomSizes ?? []).join("\n") || "—"}
+Ár-tartomány: ${d.priceRange ?? "—"}${d.priceCategory ? ` (${d.priceCategory})` : ""}
+Márka: ${(d.brands ?? []).join(", ") || "Mindegy"}
+Sürgősség: ${d.urgency ?? "—"}`;
 }
 
-function recText(d: Lead) {
-  if (d.source !== "ajanlatkero" || !d.recommended?.length) return "";
-  const rooms = d.recommended
-    .map((r) => {
-      const lines =
-        (r.picks ?? []).map((p) => `  - ${p.brand} ${p.model} – ${p.kw} kW – ${ft(p.price)}`).join("\n") ||
-        "  - nincs illő modell";
-      return `${r.room}. helyiség (${r.size}):\n${lines}`;
-    })
-    .join("\n");
-  const totals = (d.recTotals ?? []).map((t) => `${t.brand}: ${ft(t.total)}`).join(" · ");
-  return `
-
---- Javasolt modellek (belső, készülék-listaár szerelés nélkül) ---
-${rooms}${totals ? `\nBecsült készülék-összeg: ${totals}` : ""}`;
+// --- Közös árajánlatblokk ----------------------------------------------------
+// Ugyanezek a segédfüggvények építik fel az ügyfél és a belső címzettek
+// ajánlatblokkját, így mindkét fél pontosan ugyanazokat a modelleket és árakat látja.
+function quoteForLead(d: Lead) {
+  return buildQuote(d.sizes ?? [], d.priceCategory ?? "", d.brands ?? [], INSTALL_FEE_PER_UNIT);
 }
 
-// --- Vásárlói árajánlat email (/ajanlatkero) --------------------------------
-// A látogató ezt automatikusan megkapja: helyiségenként ajánlott modellek +
-// árak, telepítési díj és végösszeg (a legolcsóbb opcióval számolva).
 function quoteRoomsHtml(q: Quote) {
   return q.rooms
     .map((r, i) => {
@@ -269,11 +228,7 @@ function quoteRoomsHtml(q: Quote) {
             ? ` <span style="display:inline-block;margin-left:6px;padding:2px 9px;font-size:11px;font-weight:bold;color:#fff;background:#2563eb;border-radius:999px;">Legjobb ár</span>`
             : ""
         }</div>
-        <div style="margin-top:6px;font-size:17px;font-weight:bold;color:#2563eb;">${ft(o.price)} ${
-          q.installPerUnit > 0
-            ? `<span style="font-size:13px;font-weight:normal;color:#888;">+ ${ft(q.installPerUnit)} telepítés</span>`
-            : `<span style="font-size:13px;font-weight:normal;color:#16a34a;">telepítéssel együtt</span>`
-        }</div>
+        <div style="margin-top:6px;font-size:17px;font-weight:bold;color:#2563eb;">${ft(o.price)} <span style="font-size:13px;font-weight:normal;color:#888;">készülékár · szerelés nélkül</span></div>
       </div>`;
         })
         .join("");
@@ -286,10 +241,73 @@ function quoteRoomsHtml(q: Quote) {
     .join("");
 }
 
+function quoteSummaryHtml(q: Quote) {
+  return `
+    <div style="margin:22px 0 8px;padding:18px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;">
+      <p style="margin:0 0 12px;font-weight:bold;font-size:16px;color:#1d4ed8;">💰 Készülékárak összesítése (legolcsóbb opcióval)</p>
+      <table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
+        <tr><td style="padding:4px 0;">Klímák száma:</td><td style="padding:4px 0;text-align:right;font-weight:600;">${esc(q.unitCount)} db</td></tr>
+      </table>
+      <div style="border-top:1px solid #bfdbfe;margin:10px 0;"></div>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr><td style="padding:2px 0;font-size:17px;font-weight:bold;color:#111;">Becsült készülékösszeg:</td><td style="padding:2px 0;text-align:right;font-size:19px;font-weight:800;color:#2563eb;">${ft(q.productsTotal)}</td></tr>
+      </table>
+      <p style="margin:12px 0 0;font-size:12px;color:#888;">* ${esc(DEVICE_PRICE_NOTE)}</p>
+    </div>`;
+}
+
+function quoteRoomsText(q: Quote) {
+  return q.rooms
+    .map((r, i) => {
+      const n = i + 1;
+      if (!r.options.length) return `${n}. helyiség (${r.size}): egyedi árajánlatot készítünk.`;
+      const lines = r.options
+        .map(
+          (o, idx) =>
+            `  ${idx === 0 ? "★" : "-"} ${o.brand} ${o.model} ${o.kw} kW – ${ft(o.price)} (készülékár, szerelés nélkül)`,
+        )
+        .join("\n");
+      return `${n}. helyiség (${r.size}):\n${lines}`;
+    })
+    .join("\n\n");
+}
+
+function quoteSummaryText(q: Quote) {
+  return `--- Készülékárak összesítése (legolcsóbb opcióval) ---
+Klímák száma: ${q.unitCount} db
+Becsült készülékösszeg: ${ft(q.productsTotal)}
+
+* ${DEVICE_PRICE_NOTE}`;
+}
+
+function internalQuoteHtml(d: Lead) {
+  if (d.source !== "ajanlatkero") return "";
+  const q = quoteForLead(d);
+  return `
+  <div style="margin:24px 0 0;border-top:2px solid #bfdbfe;padding-top:18px;">
+    <p style="margin:0 0 4px;font-weight:bold;font-size:17px;color:#1d4ed8;">📧 Az ügyfélnek kiküldött ajánlat</p>
+    <p style="margin:0 0 8px;color:#555;">Az alábbi készülékopciókat és árakat az ügyfél is pontosan így kapta meg:</p>
+    ${quoteRoomsHtml(q)}
+    ${quoteSummaryHtml(q)}
+  </div>`;
+}
+
+function internalQuoteText(d: Lead) {
+  if (d.source !== "ajanlatkero") return "";
+  const q = quoteForLead(d);
+  return `
+
+--- Az ügyfélnek kiküldött ajánlat ---
+Az alábbi készülékopciókat és árakat az ügyfél is pontosan így kapta meg:
+
+${quoteRoomsText(q)}
+
+${quoteSummaryText(q)}`;
+}
+
 function quoteHtml(d: Lead) {
-  const q = buildQuote(d.sizes ?? [], d.priceCategory ?? "", d.brands ?? [], INSTALL_FEE_PER_UNIT);
+  const q = quoteForLead(d);
   const first = (d.firstName ?? "").trim() || "Érdeklődő";
-  const brands = (d.brands ?? []).filter((b) => b && b !== "Mindegy").join(", ") || "Mindegy";
   const roomCount = d.rooms ?? q.rooms.length;
   return `<!doctype html>
 <html lang="hu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -303,40 +321,10 @@ function quoteHtml(d: Lead) {
     <p style="margin:18px 0 6px;font-size:16px;">Kedves ${esc(first)}!</p>
     <p style="margin:0 0 18px;font-size:15px;color:#444;">Az Ön ${esc(roomCount)} helyiségére az alábbi klímaberendezéseket ajánljuk:</p>
 
-    <div style="margin:0 0 6px;padding:16px 18px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;">
-      <p style="margin:0 0 8px;font-weight:bold;color:#c2630f;">Az Ön igényei</p>
-      <table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
-        <tr><td style="padding:3px 0;color:#777;">Helyiségek száma:</td><td style="padding:3px 0;text-align:right;font-weight:600;">${esc(roomCount)} db</td></tr>
-        <tr><td style="padding:3px 0;color:#777;">Ár-kategória:</td><td style="padding:3px 0;text-align:right;font-weight:600;">${esc(d.priceCategory) || "—"}</td></tr>
-        <tr><td style="padding:3px 0;color:#777;">Kedvelt márkák:</td><td style="padding:3px 0;text-align:right;font-weight:600;">${esc(brands)}</td></tr>
-        <tr><td style="padding:3px 0;color:#777;">Sürgősség:</td><td style="padding:3px 0;text-align:right;font-weight:600;">${esc(d.urgency) || "—"}</td></tr>
-      </table>
-    </div>
+    ${quoteCriteriaHtml(d, "Az Ön igényei")}
 
     ${quoteRoomsHtml(q)}
-
-    <div style="margin:22px 0 8px;padding:18px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;">
-      <p style="margin:0 0 12px;font-weight:bold;font-size:16px;color:#1d4ed8;">💰 Összesítés (legolcsóbb opcióval)</p>
-      ${
-        q.installPerUnit > 0
-          ? `<table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
-        <tr><td style="padding:4px 0;">Termékek összesen (${esc(q.unitCount)} db klíma):</td><td style="padding:4px 0;text-align:right;font-weight:600;">${ft(q.productsTotal)}</td></tr>
-        <tr><td style="padding:4px 0;">Telepítési díjak összesen:</td><td style="padding:4px 0;text-align:right;font-weight:600;">${ft(q.installTotal)}</td></tr>
-      </table>
-      <div style="border-top:1px solid #bfdbfe;margin:10px 0;"></div>
-      <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:2px 0;font-size:17px;font-weight:bold;color:#111;">Végösszeg:</td><td style="padding:2px 0;text-align:right;font-size:19px;font-weight:800;color:#2563eb;">${ft(q.grandTotal)}</td></tr>
-      </table>`
-          : `<table style="width:100%;font-size:14px;color:#333;border-collapse:collapse;">
-        <tr><td style="padding:4px 0;">Klímák száma:</td><td style="padding:4px 0;text-align:right;font-weight:600;">${esc(q.unitCount)} db</td></tr>
-      </table>
-      <div style="border-top:1px solid #bfdbfe;margin:10px 0;"></div>
-      <table style="width:100%;border-collapse:collapse;">
-        <tr><td style="padding:2px 0;font-size:17px;font-weight:bold;color:#111;">Végösszeg (telepítéssel):</td><td style="padding:2px 0;text-align:right;font-size:19px;font-weight:800;color:#2563eb;">${ft(q.grandTotal)}</td></tr>
-      </table>`
-      }
-      <p style="margin:12px 0 0;font-size:12px;color:#888;">* ${esc(q.installPerUnit > 0 ? INSTALL_EXTRA_NOTE : INSTALL_INCLUDED_NOTE)}</p>
-    </div>
+    ${quoteSummaryHtml(q)}
 
     <p style="margin:26px 0 12px;text-align:center;font-size:15px;color:#444;">Kérdése van? Hívjon minket bizalommal!</p>
     <p style="margin:0;text-align:center;">
@@ -353,42 +341,20 @@ function quoteHtml(d: Lead) {
 }
 
 function quoteText(d: Lead) {
-  const q = buildQuote(d.sizes ?? [], d.priceCategory ?? "", d.brands ?? [], INSTALL_FEE_PER_UNIT);
+  const q = quoteForLead(d);
   const first = (d.firstName ?? "").trim() || "Érdeklődő";
-  const rooms = q.rooms
-    .map((r, i) => {
-      const n = i + 1;
-      if (!r.options.length) return `${n}. helyiség (${r.size}): egyedi árajánlatot készítünk.`;
-      const lines = r.options
-        .map(
-          (o, idx) =>
-            `  ${idx === 0 ? "★" : "-"} ${o.brand} ${o.model} ${o.kw} kW – ${ft(o.price)}${
-              q.installPerUnit > 0 ? ` + ${ft(q.installPerUnit)} telepítés` : " (telepítéssel együtt)"
-            }`,
-        )
-        .join("\n");
-      return `${n}. helyiség (${r.size}):\n${lines}`;
-    })
-    .join("\n\n");
   return `Személyre szabott klíma ajánlat
 
 Kedves ${first}!
 
 Az Ön ${d.rooms ?? q.rooms.length} helyiségére az alábbi klímaberendezéseket ajánljuk:
 
-${rooms}
+--- Az Ön igényei ---
+${quoteCriteriaText(d)}
 
---- Összesítés (legolcsóbb opcióval) ---
-${
-  q.installPerUnit > 0
-    ? `Termékek összesen (${q.unitCount} db klíma): ${ft(q.productsTotal)}
-Telepítési díjak összesen: ${ft(q.installTotal)}
-Végösszeg: ${ft(q.grandTotal)}`
-    : `Klímák száma: ${q.unitCount} db
-Végösszeg (telepítéssel): ${ft(q.grandTotal)}`
-}
+${quoteRoomsText(q)}
 
-* ${q.installPerUnit > 0 ? INSTALL_EXTRA_NOTE : INSTALL_INCLUDED_NOTE}
+${quoteSummaryText(q)}
 
 Kérdése van? Hívjon minket: ${PHONE_DISPLAY}
 
@@ -425,8 +391,8 @@ function notifyHtml(d: Lead) {
     <strong>Marketing hozzájárulás:</strong> ${d.marketingConsent ? "igen" : "nem"}<br>
     <strong>Beérkezett:</strong> ${esc(when)}
   </p>
-  ${calcBlockHtml(d)}
-  ${recBlockHtml(d)}
+  ${d.source === "ajanlatkero" ? quoteCriteriaHtml(d, "🧮 Ajánlatkérő kalkulátor") : ""}
+  ${internalQuoteHtml(d)}
 </div>
 </body></html>`;
 }
@@ -445,12 +411,7 @@ function notifyText(d: Lead) {
     d.source === "ajanlatkero"
       ? `
 --- Ajánlatkérő kalkulátor ---
-Helyiségek: ${d.rooms ?? "—"} db
-Méretek:
-${(d.roomSizes ?? []).join("\n") || "—"}
-Ár-tartomány: ${d.priceRange ?? "—"}${d.priceCategory ? ` (${d.priceCategory})` : ""}
-Márka: ${(d.brands ?? []).join(", ") || "Mindegy"}
-Sürgősség: ${d.urgency ?? "—"}`
+${quoteCriteriaText(d)}`
       : "";
   return `Új jelentkezés – Klima Plus
 
@@ -459,7 +420,7 @@ E-mail: ${d.email ?? "—"}
 Telefonszám: ${d.phone ?? "—"}
 Település / ISZ: ${d.city ?? d.zip ?? "—"}
 Háztípus: ${d.houseType ?? "—"}
-${d.source === "ajanlatkero" && d.siteSurvey ? `Helyszíni felmérés: ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}\n` : ""}Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}${calc}${recText(d)}`;
+${d.source === "ajanlatkero" && d.siteSurvey ? `Helyszíni felmérés: ${d.siteSurvey === "callback" ? "Igen, érdekli – visszahívást kér" : "Nem, egyelőre csak tájékozódik"}\n` : ""}Marketing hozzájárulás: ${d.marketingConsent ? "igen" : "nem"}${calc}${internalQuoteText(d)}`;
 }
 
 export async function POST(req: Request) {

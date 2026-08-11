@@ -1,8 +1,7 @@
-// Klíma ár-adatbázis – a szerelő által megadott listaárak alapján.
+// Klíma ár-adatbázis – a szerelő által megadott készülék-listaárak alapján.
 // A /ajanlatkero kalkulátor ez alapján keresi ki minden helyiséghez a méret +
-// kategória + márka szerinti konkrét modellt és árat. EGYELŐRE csak belső
-// használatra (a szerelőnek küldött értesítő emailben) – a látogatónak nem
-// jelenik meg ár. Az árak forrás szerint készülék-listaárak.
+// kategória + márka szerinti konkrét modelleket. Ezek az árak nem tartalmazzák
+// a szerelést; az ügyfél és a belső címzettek ugyanazt az ajánlatot kapják.
 
 export type SizeKey = "15-25" | "25-35" | "35-50" | "50+";
 export type CategoryKey = "olcso" | "kozep" | "premium" | "luxus";
@@ -221,8 +220,8 @@ export type Recommendation = {
   totals: { brand: BrandKey; total: number }[];
 };
 
-// A teljes ajánlat: helyiségenként a márkánkénti javasolt modell + ár, és
-// márkánkénti végösszeg. Csak belső (szerelői) email célra.
+// Segédfüggvény egyetlen, márkánkénti modell kiválasztásához. Az emailek nem
+// ezt, hanem a közös buildQuote() eredményét használják, hogy ne térjenek el.
 export function recommend(
   sizeLabels: (string | null)[],
   categoryLabel: string,
@@ -257,10 +256,9 @@ export function recommend(
   return { rooms, totals };
 }
 
-// --- Vásárlói árajánlat (customer-facing) -----------------------------------
-// A recommend() egy márkánkénti "legjobb" modellt ad a szerelőnek. A vásárlói
-// árajánlathoz helyiségenként TÖBB opciót mutatunk (a kiválasztott márkák
-// illő modelljei), a legolcsóbbat kiemelve, és a telepítési díjjal + végösszeggel.
+// --- Emailes árajánlat -------------------------------------------------------
+// Helyiségenként több opciót adunk (a kiválasztott márkák illő modelljei),
+// a legolcsóbbat kiemelve. Ezt használja az ügyfél- és a belső email is.
 
 // Egy márkából egy helyiséghez illő modellek. Elsőként pontosan a kért
 // kategóriát nézi; ha ott nincs (és a fallback engedélyezett), a legközelebbi
@@ -310,8 +308,8 @@ export type Quote = {
   grandTotal: number;
 };
 
-// A teljes vásárlói árajánlat: helyiségenként opciók + a legolcsóbb opcióval
-// számolt végösszeg (készülék + telepítés).
+// A teljes árajánlat: helyiségenként opciók + a legolcsóbb opcióval számolt
+// készülékösszeg. Külön szerelési díj csak explicit installPerUnit értékkel adódik hozzá.
 export function buildQuote(
   sizeLabels: (string | null)[],
   categoryLabel: string,

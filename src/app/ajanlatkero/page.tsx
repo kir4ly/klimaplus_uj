@@ -4,7 +4,6 @@ import { useMemo, useState, useEffect } from "react";
 import Script from "next/script";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { recommend } from "@/lib/klimaPrices";
 import {
   ArrowLeft,
   ArrowRight,
@@ -228,10 +227,6 @@ export default function AjanlatkeroPage() {
       const rooms = s.rooms ?? 1;
       const roomSizes = s.sizes.slice(0, rooms).map((sz, i) => `${i + 1}. helyiség: ${sz ?? "n/a"}`);
 
-      // Belső (szerelői) ajánlás: helyiségenként a méret + kategória + márka
-      // szerinti konkrét modell + ár. A látogató NEM látja, csak az emailbe kerül.
-      const rec = recommend(s.sizes.slice(0, rooms), s.priceCategory ?? "", s.brands);
-
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -251,8 +246,6 @@ export default function AjanlatkeroPage() {
           priceCategory: s.priceCategory ?? "Egyéni",
           brands: s.brands.length ? s.brands : ["Mindegy"],
           urgency: s.urgency ?? "Nincs megadva",
-          recommended: rec.rooms.map((r, i) => ({ room: i + 1, size: r.size, picks: r.picks })),
-          recTotals: rec.totals,
           turnstileToken,
           eventId,
           // Pontos URL a CAPI dedup jobb működéséhez (event_source_url)
