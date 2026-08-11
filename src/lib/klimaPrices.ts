@@ -39,9 +39,9 @@ export const MODELS: ClimaModel[] = [
     model: "Pulse Pro",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.5, price: 235000 },
-      "25-35": { kw: 3.5, price: 250000 },
-      "35-50": { kw: 5.3, price: 360000 },
+      "15-25": { kw: 2.5, price: 205000 },
+      "25-35": { kw: 3.5, price: 215000 },
+      "35-50": { kw: 5.3, price: 310000 },
       "50+": { kw: 7.1, price: 445000 },
     },
   },
@@ -50,10 +50,10 @@ export const MODELS: ClimaModel[] = [
     model: "Comfort Pro",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.7, price: 260000 },
-      "25-35": { kw: 3.5, price: 275000 },
-      "35-50": { kw: 5.3, price: 405000 },
-      "50+": { kw: 7.1, price: 485000 },
+      "15-25": { kw: 2.7, price: 245000 },
+      "25-35": { kw: 3.5, price: 260000 },
+      "35-50": { kw: 5.3, price: 370000 },
+      "50+": { kw: 7.1, price: 450000 },
     },
   },
   {
@@ -96,9 +96,9 @@ export const MODELS: ClimaModel[] = [
     model: "Charm",
     category: "olcso",
     variants: {
-      "15-25": { kw: 2.7, price: 200000 },
-      "25-35": { kw: 3.2, price: 205000 },
-      "35-50": { kw: 4.6, price: 345000 },
+      "15-25": { kw: 2.7, price: 180000 },
+      "25-35": { kw: 3.2, price: 190000 },
+      "35-50": { kw: 4.6, price: 285000 },
       "50+": { kw: 6.2, price: 400000 },
     },
   },
@@ -107,10 +107,10 @@ export const MODELS: ClimaModel[] = [
     model: "Muse Next",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.7, price: 225000 },
-      "25-35": { kw: 3.5, price: 235000 }, // forrásban "35-35 m2" elgépelés
-      "35-50": { kw: 5.3, price: 345000 },
-      "50+": { kw: 7.1, price: 440000 },
+      "15-25": { kw: 2.7, price: 215000 },
+      "25-35": { kw: 3.5, price: 230000 }, // forrásban "35-35 m2" elgépelés
+      "35-50": { kw: 5.3, price: 330000 },
+      "50+": { kw: 7.1, price: 425000 },
     },
   },
 
