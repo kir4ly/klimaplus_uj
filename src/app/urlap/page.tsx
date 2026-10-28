@@ -199,7 +199,7 @@ export default function UrlapPage() {
 
           <p className="text-center text-xl leading-relaxed text-white/90 md:text-2xl">
             <span className="font-black text-red-500">FIGYELEM!</span><br />
-            A nyár közeledtével gyorsan fogynak szabad időpontjaink.<br />
+            Jelenleg gyorsan fogynak szabad időpontjaink helyszíni felmérésre.<br />
             Ha ezt látja, még van szabad hely.
           </p>
 
