@@ -43,17 +43,18 @@ const SIZE_OPTIONS = [
 ];
 
 const PRICE_CATEGORIES = [
-  { label: "Olcsó", min: 180000, max: 250000 },
+  { label: "Olcsó", min: 160000, max: 250000 },
   { label: "Közép", min: 250000, max: 350000 },
   { label: "Prémium", min: 350000, max: 500000 },
   { label: "Luxus", min: 500000, max: 900000 },
 ];
-const PRICE_FLOOR = 180000;
+const PRICE_FLOOR = 160000;
 
 type Brand = { label: string; logo?: string; Icon?: React.ComponentType<{ className?: string }>; exclusive?: boolean };
 const BRANDS: Brand[] = [
   { label: "Gree", logo: "/brands/gree.svg" },
   { label: "Syen", logo: "/brands/syen.png" },
+  { label: "Kinghome" }, // nincs még logó – szöveges jelvény
   { label: "Aux" }, // nincs még logó – szöveges jelvény
   { label: "Nem tudom", Icon: HelpCircle, exclusive: true },
 ];
@@ -327,7 +328,7 @@ export default function AjanlatkeroPage() {
             className="mt-6 flex flex-1 flex-col"
           >
             {done ? (
-              <ThankYou name={s.name} email={s.email} />
+              <ThankYou name={s.name} email={s.email} callback={s.siteSurvey === "callback"} />
             ) : (
               <>
                 {/* Progress fejléc minden lépésnél */}
@@ -431,7 +432,11 @@ export default function AjanlatkeroPage() {
                                       <Icon className="h-5 w-5 text-blue-400" />
                                     </span>
                                   ) : (
-                                    <span className="grid h-10 w-20 shrink-0 place-items-center rounded-lg bg-white text-base font-extrabold tracking-wide text-neutral-900">
+                                    <span
+                                      className={`grid h-10 w-20 shrink-0 place-items-center rounded-lg bg-white px-1 text-center font-extrabold leading-none text-neutral-900 ${
+                                        b.label.length > 4 ? "text-[9px] tracking-tight" : "text-base tracking-wide"
+                                      }`}
+                                    >
                                       {b.label.toUpperCase()}
                                     </span>
                                   )}
@@ -732,7 +737,7 @@ function Field({ label, icon, children }: { label: string; icon: React.ReactNode
   );
 }
 
-function ThankYou({ name, email }: { name: string; email: string }) {
+function ThankYou({ name, email, callback }: { name: string; email: string; callback: boolean }) {
   const first = name.trim().split(/\s+/).slice(-1)[0] || "";
   return (
     <div className="flex flex-1 flex-col items-center pt-16 text-center">
@@ -752,7 +757,8 @@ function ThankYou({ name, email }: { name: string; email: string }) {
         ) : (
           " a megadott email címre"
         )}
-        . Ha nem találja, nézze meg a Spam mappát is.
+        . Ha nem találja, nézze meg a Spam mappát is. Az árak 2026. december 31-ig, vagy visszavonásig érvényesek.
+        {callback ? " Munkatársunk 2 munkanapon belül visszahívja Önt." : ""}
       </p>
       <a
         href="tel:+36702566448"

@@ -502,7 +502,7 @@ function AboutUs() {
     },
     {
       title: "Klíma márkák",
-      desc: "Elsősorban Gree, Syen, Polar, Aux klímaberendezéseket forgalmazunk, de minden márkát be tudunk szerezni ha az ügyfél úgy kívánja.",
+      desc: "Elsősorban Gree, Syen, Kinghome, Polar és Aux klímaberendezéseket forgalmazunk, de minden márkát be tudunk szerezni ha az ügyfél úgy kívánja.",
     },
     {
       title: "Versenyképes árak",

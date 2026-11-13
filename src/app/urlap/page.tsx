@@ -212,7 +212,7 @@ export default function UrlapPage() {
                     <p className="mt-4 text-neutral-700">
                       Az Ön irányítószáma a szolgáltatási területünkön belül van, így{" "}
                       <strong>jogosult egy INGYENES helyszíni felmérésre!</strong><br />
-                      <strong>24 órán belül</strong> felhívjuk az időpont egyeztetéséhez.
+                      <strong>2 munkanapon belül</strong> felhívjuk az időpont egyeztetéséhez.
                     </p>
                   </>
                 ) : (
@@ -220,7 +220,7 @@ export default function UrlapPage() {
                     <h2 className="text-2xl font-bold text-green-600">Sikeres jelentkezés! :)</h2>
                     <p className="mt-4 text-neutral-700">
                       Köszönjük a jelentkezését!<br />
-                      <strong>24 órán belül</strong> felhívjuk, és tájékoztatjuk az ingyenes felmérés lehetőségéről.
+                      <strong>2 munkanapon belül</strong> felhívjuk, és tájékoztatjuk az ingyenes felmérés lehetőségéről.
                     </p>
                   </>
                 )}

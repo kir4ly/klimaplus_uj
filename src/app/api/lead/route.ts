@@ -110,6 +110,9 @@ const FROM = "Klima Plus <noreply@klimapluscell.hu>";
 const INSTALL_FEE_PER_UNIT = 0;
 const DEVICE_PRICE_NOTE =
   "A feltüntetett árak kizárólag a klímaberendezések árát tartalmazzák. A szerelés díja nincs benne; arra a helyszíni felmérés után külön ajánlatot adunk.";
+const PRICE_VALIDITY_NOTE =
+  "Az árak 2026. december 31-ig, vagy visszavonásig érvényesek.";
+const CALLBACK_NOTE = "Munkatársunk 2 munkanapon belül visszahívja Önt.";
 const NOTIFY = (process.env.LEAD_NOTIFY_EMAILS || "")
   .split(",")
   .map((s) => s.trim())
@@ -139,7 +142,8 @@ function confirmationHtml(firstName: string) {
   <h1 style="margin:0 0 16px;font-size:20px;color:#16a34a;">Sikeres jelentkezés</h1>
   <p style="margin:0 0 14px;">Kedves ${name}!</p>
   <p style="margin:0 0 14px;">Köszönjük a jelentkezését a klíma telepítés kapcsán. Megkaptuk az adatait.</p>
-  <p style="margin:0 0 14px;"><strong>24 órán belül telefonon felvesszük Önnel a kapcsolatot.</strong></p>
+  <p style="margin:0 0 14px;"><strong>2 munkanapon belül telefonon felvesszük Önnel a kapcsolatot.</strong></p>
+  <p style="margin:0 0 14px;">${PRICE_VALIDITY_NOTE}</p>
   <p style="margin:0 0 22px;">Ha nem szeretne várni, hívjon minket: <a href="tel:${PHONE_TEL}" style="color:#1f9fd6;text-decoration:none;">${PHONE_DISPLAY}</a></p>
   <p style="margin:0 0 24px;">Üdvözlettel,<br>Takács Tamás &middot; Klima Plus Cell Kft.</p>
   <p style="margin:0;border-top:1px solid #eeeeee;padding-top:14px;font-size:12px;color:#999999;">Klima Plus Cell Kft. &middot; Koptik Odó utca 20., 9500 Celldömölk &middot; Adószám: 32621880-2-18</p>
@@ -150,7 +154,9 @@ function confirmationHtml(firstName: string) {
 function confirmationText(firstName: string) {
   return `Kedves ${firstName}!
 
-Köszönjük a jelentkezését a klíma telepítés kapcsán! Megkaptuk az adatait, és 24 órán belül telefonon felvesszük Önnel a kapcsolatot.
+Köszönjük a jelentkezését a klíma telepítés kapcsán! Megkaptuk az adatait, és 2 munkanapon belül telefonon felvesszük Önnel a kapcsolatot.
+
+${PRICE_VALIDITY_NOTE}
 
 Nem szeretne várni? Hívjon most: ${PHONE_DISPLAY}
 
@@ -253,6 +259,7 @@ function quoteSummaryHtml(q: Quote) {
         <tr><td style="padding:2px 0;font-size:17px;font-weight:bold;color:#111;">Becsült készülékösszeg:</td><td style="padding:2px 0;text-align:right;font-size:19px;font-weight:800;color:#2563eb;">${ft(q.productsTotal)}</td></tr>
       </table>
       <p style="margin:12px 0 0;font-size:12px;color:#888;">* ${esc(DEVICE_PRICE_NOTE)}</p>
+      <p style="margin:8px 0 0;font-size:13px;color:#444;">${esc(PRICE_VALIDITY_NOTE)}</p>
     </div>`;
 }
 
@@ -277,7 +284,8 @@ function quoteSummaryText(q: Quote) {
 Klímák száma: ${q.unitCount} db
 Becsült készülékösszeg: ${ft(q.productsTotal)}
 
-* ${DEVICE_PRICE_NOTE}`;
+* ${DEVICE_PRICE_NOTE}
+${PRICE_VALIDITY_NOTE}`;
 }
 
 function internalQuoteHtml(d: Lead) {
@@ -326,6 +334,12 @@ function quoteHtml(d: Lead) {
     ${quoteRoomsHtml(q)}
     ${quoteSummaryHtml(q)}
 
+    ${
+      d.siteSurvey === "information_only"
+        ? ""
+        : `<p style="margin:18px 0 0;font-size:15px;color:#444;">${esc(CALLBACK_NOTE)}</p>`
+    }
+
     <p style="margin:26px 0 12px;text-align:center;font-size:15px;color:#444;">Kérdése van? Hívjon minket bizalommal!</p>
     <p style="margin:0;text-align:center;">
       <a href="tel:${PHONE_TEL}" style="display:inline-block;padding:13px 30px;background:#2563eb;color:#fff;font-weight:bold;font-size:16px;text-decoration:none;border-radius:999px;">${PHONE_DISPLAY}</a>
@@ -355,7 +369,7 @@ ${quoteCriteriaText(d)}
 ${quoteRoomsText(q)}
 
 ${quoteSummaryText(q)}
-
+${d.siteSurvey === "information_only" ? "" : `\n${CALLBACK_NOTE}\n`}
 Kérdése van? Hívjon minket: ${PHONE_DISPLAY}
 
 Klima Plus Cell Kft. · Koptik Odó utca 20., 9500 Celldömölk

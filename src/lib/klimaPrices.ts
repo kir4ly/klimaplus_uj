@@ -5,7 +5,7 @@
 
 export type SizeKey = "15-25" | "25-35" | "35-50" | "50+";
 export type CategoryKey = "olcso" | "kozep" | "premium" | "luxus";
-export type BrandKey = "Gree" | "Syen" | "Aux";
+export type BrandKey = "Gree" | "Syen" | "Kinghome" | "Aux";
 
 export type Variant = { kw: number; price: number };
 export type ClimaModel = {
@@ -39,8 +39,8 @@ export const MODELS: ClimaModel[] = [
     model: "Pulse Pro",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.5, price: 205000 },
-      "25-35": { kw: 3.5, price: 215000 },
+      "15-25": { kw: 2.5, price: 200000 },
+      "25-35": { kw: 3.5, price: 210000 },
       "35-50": { kw: 5.3, price: 310000 },
       "50+": { kw: 7.1, price: 445000 },
     },
@@ -50,10 +50,10 @@ export const MODELS: ClimaModel[] = [
     model: "Comfort Pro",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.7, price: 245000 },
-      "25-35": { kw: 3.5, price: 260000 },
-      "35-50": { kw: 5.3, price: 370000 },
-      "50+": { kw: 7.1, price: 450000 },
+      "15-25": { kw: 2.7, price: 235000 },
+      "25-35": { kw: 3.5, price: 250000 },
+      "35-50": { kw: 5.3, price: 360000 },
+      "50+": { kw: 7.1, price: 460000 },
     },
   },
   {
@@ -61,10 +61,10 @@ export const MODELS: ClimaModel[] = [
     model: "G Time",
     category: "premium",
     variants: {
-      "15-25": { kw: 2.7, price: 265000 },
-      "25-35": { kw: 3.5, price: 290000 },
-      "35-50": { kw: 5.1, price: 420000 },
-      "50+": { kw: 7.1, price: 495000 },
+      "15-25": { kw: 2.7, price: 245000 },
+      "25-35": { kw: 3.5, price: 255000 },
+      "35-50": { kw: 5.1, price: 380000 },
+      "50+": { kw: 7.1, price: 480000 },
     },
   },
   {
@@ -96,8 +96,8 @@ export const MODELS: ClimaModel[] = [
     model: "Charm",
     category: "olcso",
     variants: {
-      "15-25": { kw: 2.7, price: 180000 },
-      "25-35": { kw: 3.2, price: 190000 },
+      "15-25": { kw: 2.7, price: 175000 },
+      "25-35": { kw: 3.2, price: 185000 },
       "35-50": { kw: 4.6, price: 285000 },
       "50+": { kw: 6.2, price: 400000 },
     },
@@ -107,10 +107,34 @@ export const MODELS: ClimaModel[] = [
     model: "Muse Next",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.7, price: 215000 },
-      "25-35": { kw: 3.5, price: 230000 }, // forrásban "35-35 m2" elgépelés
-      "35-50": { kw: 5.3, price: 330000 },
-      "50+": { kw: 7.1, price: 425000 },
+      "15-25": { kw: 2.7, price: 210000 },
+      "25-35": { kw: 3.5, price: 220000 },
+      "35-50": { kw: 5.3, price: 335000 },
+      "50+": { kw: 7.1, price: 440000 },
+    },
+  },
+
+  // ---- KINGHOME ----
+  {
+    brand: "Kinghome",
+    model: "Primor",
+    category: "olcso",
+    // Nincs 50+ változat. Kiegészítő fűtés (tavasz, ősz).
+    variants: {
+      "15-25": { kw: 2.5, price: 180000 },
+      "25-35": { kw: 3.5, price: 190000 },
+      "35-50": { kw: 4.6, price: 290000 },
+    },
+  },
+  {
+    brand: "Kinghome",
+    model: "Maximus",
+    category: "olcso",
+    // Nincs 50+ változat. Téliesített, -25 °C-ig.
+    variants: {
+      "15-25": { kw: 2.7, price: 185000 },
+      "25-35": { kw: 3.5, price: 195000 },
+      "35-50": { kw: 5.3, price: 280000 },
     },
   },
 
@@ -119,10 +143,10 @@ export const MODELS: ClimaModel[] = [
     brand: "Aux",
     model: "Gamma 3R",
     category: "olcso",
-    // Nincs 50+ változat; a "5,1 kw 50 m2" a 35-50 sávba sorolva.
+    // Nincs 50+ változat.
     variants: {
-      "15-25": { kw: 2.5, price: 190000 },
-      "25-35": { kw: 3.5, price: 200000 },
+      "15-25": { kw: 2.5, price: 160000 },
+      "25-35": { kw: 3.5, price: 175000 },
       "35-50": { kw: 5.1, price: 290000 },
     },
   },
@@ -131,10 +155,10 @@ export const MODELS: ClimaModel[] = [
     model: "Delta 3",
     category: "kozep",
     variants: {
-      "15-25": { kw: 2.7, price: 215000 },
-      "25-35": { kw: 3.5, price: 230000 },
-      "35-50": { kw: 5.4, price: 340000 },
-      "50+": { kw: 7.3, price: 460000 },
+      "15-25": { kw: 2.7, price: 205000 },
+      "25-35": { kw: 3.5, price: 215000 },
+      "35-50": { kw: 5.4, price: 320000 },
+      "50+": { kw: 7.3, price: 420000 },
     },
   },
   {
@@ -143,30 +167,30 @@ export const MODELS: ClimaModel[] = [
     category: "premium",
     // Nincs 50+ változat.
     variants: {
-      "15-25": { kw: 2.7, price: 245000 },
-      "25-35": { kw: 3.5, price: 265000 },
-      "35-50": { kw: 5.4, price: 390000 },
+      "15-25": { kw: 2.7, price: 230000 },
+      "25-35": { kw: 3.5, price: 245000 },
+      "35-50": { kw: 5.4, price: 370000 },
     },
   },
   {
     brand: "Aux",
     model: "Aura",
-    category: "luxus",
+    category: "premium",
     variants: {
-      "15-25": { kw: 2.7, price: 265000 },
-      "25-35": { kw: 3.5, price: 280000 },
-      "35-50": { kw: 5.4, price: 410000 },
-      "50+": { kw: 7.3, price: 480000 },
+      "15-25": { kw: 2.7, price: 240000 },
+      "25-35": { kw: 3.5, price: 260000 },
+      "35-50": { kw: 5.4, price: 380000 },
+      "50+": { kw: 7.3, price: 460000 },
     },
   },
 ];
 
-export const ALL_BRANDS: BrandKey[] = ["Gree", "Syen", "Aux"];
+export const ALL_BRANDS: BrandKey[] = ["Gree", "Syen", "Kinghome", "Aux"];
 
 export const huf = (n: number) => n.toLocaleString("hu-HU") + " Ft";
 
 // A brand-címkékből valódi márkakulcsok. Ha nincs konkrét (üres, "Mindegy",
-// "Nem tudom"), akkor mindhárom márkát nézzük.
+// "Nem tudom"), akkor az összes márkát nézzük.
 function resolveBrands(brandLabels: string[]): BrandKey[] {
   const real = ALL_BRANDS.filter((b) => brandLabels.includes(b));
   return real.length ? real : ALL_BRANDS;
